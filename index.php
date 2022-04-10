@@ -5,7 +5,7 @@
  * 
  * Created By Bruiz(@~codeHart~) 2022
  * 
- * PHP Version 7.4.
+ * PHP Version 8
  */
 
 
