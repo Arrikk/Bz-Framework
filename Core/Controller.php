@@ -145,11 +145,11 @@ abstract class Controller
 
     /**
      * Encrypt and decrypt data ..(message, string, int, func etc...)
-     * @param string $type Encrypt = en Decrypt = dc
+     * @param string $type Encrypt = enc Decrypt = dec
      * @param string $string any
      * @return string
      */
-    public function ambig($type, $string){
+    public function jwt($type, $string){
         $output = '';
 
         $enc_type = 'AES-256-CBC';
@@ -159,11 +159,11 @@ abstract class Controller
         $key = \hash('sha256', $secret);
         $initVect = \substr(\hash('sha256', $secret_iv), 0, 16);
 
-        if($type == 'en'){
+        if($type == 'enc'){
             $output = \openssl_encrypt($string, $enc_type, $key, 0, $initVect);
             $output = \base64_encode($output);
         }
-        if($type == 'dc'){
+        if($type == 'dec'){
             $output = \base64_decode($string);
             $output = \openssl_decrypt($output, $enc_type, $key, 0, $initVect);
         }
