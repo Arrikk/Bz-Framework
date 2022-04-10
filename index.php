@@ -22,21 +22,20 @@ use Router\Route;
 /**
  * Twig
  */
-// Twig_Autoloader::register();
+Twig_Autoloader::register();
 
 ini_set('max_execution_time', 130);
 date_default_timezone_set('Africa/Lagos');
-define('SIGN', '₱');
 
 /**
  * Error
  */
 
-// error_reporting(E_ALL);
-// set_error_handler('Core\Error::errorHandler');
-// set_exception_handler('Core\Error::exceptionHandler');
+error_reporting(E_ALL);
+set_error_handler('Core\Error::errorHandler');
+set_exception_handler('Core\Error::exceptionHandler');
 
-define('URL', $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/');
+// define('URL', $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/');
 
 /**
  * Session
