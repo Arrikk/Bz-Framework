@@ -5,42 +5,44 @@
  * 
  * Created By Bruiz(@~codeHart~) 2022
  * 
- * PHP Version 7.4.8
+ * PHP Version 7.4.
  */
 
 
 /**
  * Autoload
  */
-require 'Vendor/autoload.php';
+require 'vendor/autoload.php';
+/**
+ * Add route to the Routing Table
+ */
+
+use Router\Route;
+
+/**
+ * Twig
+ */
+// Twig_Autoloader::register();
+
+ini_set('max_execution_time', 130);
+date_default_timezone_set('Africa/Lagos');
+define('SIGN', '₱');
 
 /**
  * Error
  */
-error_reporting(E_ALL);
-set_error_handler('Core\Error::errorHandler');
-set_exception_handler('Core\Error::exceptionHandler');
+
+// error_reporting(E_ALL);
+// set_error_handler('Core\Error::errorHandler');
+// set_exception_handler('Core\Error::exceptionHandler');
+
+define('URL', $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/');
 
 /**
  * Session
- */ 
+ */
 session_start();
 
+Route::Route();
 
-$router = new Core\Router;
-
-/**
- * Add routes
-*/
-// $router->add('', ['controller' => 'install', 'action' => 'index', 'namespace' => 'install']);
-// $router->add('{controller}/{action}', ['namespace' => 'install']);
-$router->add('', ['controller' => 'home', 'action' => 'index']);
-$router->add('login', ['controller' => 'auth', 'action' => 'login']);
-$router->add('register', ['controller' => 'auth', 'action' => 'register']);
-$router->add('form', ['controller' => 'home', 'action' => 'test'])->post();
-$router->add('{controller}/{action}')->get();
-// $router->add
-
-// Execute
-$url = ltrim(rtrim($_SERVER['QUERY_STRING']));
-$router->dispatch($url);
+// echo $_SERVER['REQUEST_SCHEME'];

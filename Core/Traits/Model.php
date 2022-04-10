@@ -36,9 +36,9 @@ trait Model
      * set $self to false to return bool true or false instead
      * @return mixed integer if $self is true and bool otherwise
      */
-    private static function find(array $array = [], bool $exec = true)
+    private static function find(array $array = [], string $query = '*', bool $exec = true)
     {
-        $prep = static::select('*', static::$table);
+        $prep = static::select($query, static::$table);
         if (!empty($array)) {
             $prep = static::runMultiple($array, $prep);
         }
@@ -60,7 +60,12 @@ trait Model
      */
     private static function findOne(array $array, $type = '*', bool $exec = true)
     {
-        $prep = static::select($type, static::$table);
+        if(in_array('$.from', array_keys($array))){
+            $prep = static::select($type, '');
+
+        }else{
+            $prep = static::select($type, static::$table);
+        }
 
         if (!empty($array)) {
             $prep = static::runMultiple($array, $prep);
