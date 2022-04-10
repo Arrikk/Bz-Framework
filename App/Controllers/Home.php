@@ -20,15 +20,17 @@ class Home extends Authenticated
      *
      * @return void
      */
-    public function _index()
+    public function _index($get) # get as GET
     {
         View::draw('{/account/home}', [
             '__user' => $this->user
         ]);
     }
 
-    public function test($P)
+
+    
+    public function test($data) #Data as POST
     {
-        Res::json($P);
+        Res::json($data);
     }
 }
