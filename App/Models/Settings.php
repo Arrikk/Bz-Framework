@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Core\Http\Res;
 use Core\Traits\Model;
 
 class Settings extends \Core\Model
@@ -14,7 +15,7 @@ class Settings extends \Core\Model
      * @return string $table ..... the table name e.g 
      * (users, posts, products etc based on your Model)
      */
-    public static $table = "settings"; # declare table only if using traitModel
+    public static $table = "site_settings"; # declare table only if using traitModel
 
 
     public static function findHere($name)
@@ -24,8 +25,10 @@ class Settings extends \Core\Model
             $found =  Settings::dump(['name' => $name]);
             return json_decode($found->value);
         };
+        // Res::json(json_decode($found->value));
         return json_decode($found->value);
     }
+
     public static function UpdateHere(string $name, array $setting)
     {
         $update =  static::findAndUpdate([
