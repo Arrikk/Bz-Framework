@@ -19,6 +19,18 @@ class ComposerStaticInita79f1333a861db475e98cb4fca2e526f
         array (
             'Symfony\\Polyfill\\Ctype\\' => 23,
         ),
+        'R' => 
+        array (
+            'Router\\' => 7,
+        ),
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
+        'M' => 
+        array (
+            'Module\\' => 7,
+        ),
         'C' => 
         array (
             'Core\\' => 5,
@@ -37,6 +49,18 @@ class ComposerStaticInita79f1333a861db475e98cb4fca2e526f
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Router\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Router',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'Module\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Module',
         ),
         'Core\\' => 
         array (
@@ -59,6 +83,7 @@ class ComposerStaticInita79f1333a861db475e98cb4fca2e526f
     );
 
     public static $classMap = array (
+        'Bulletproof\\Image' => __DIR__ . '/..' . '/samayo/bulletproof/src/bulletproof.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'simplehtmldom\\Debug' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/Debug.php',
         'simplehtmldom\\HtmlDocument' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlDocument.php',
