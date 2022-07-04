@@ -18,13 +18,19 @@ final class Res implements Resinterface
     {
         header('content-type: application/json');
         echo json_encode($message);
-        return;
+        return exit;
     }
 
     public static function send($message = null)
     {
         echo $message;
-        return;
+        return exit;
+    }
+
+    public static function raw($message = null)
+    {
+        return $message;
+        exit;
     }
         
     public static function ip()

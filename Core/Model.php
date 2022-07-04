@@ -27,6 +27,9 @@ use PDOException;
      protected $assoc;
      protected $both;
      protected $last;
+     protected static $concat = 'concat';
+     protected static $replace = 'replace';
+     protected static $math = 'math';
 
 
     public function __call($method, $args)
@@ -111,11 +114,22 @@ use PDOException;
         return $this;
     }
 
-    private function _update(string $table, array $fields = []){
+    private function _update(string $table, array $fields = [], $opt = false){
         $column = '';
         $i = 1;
         foreach ($fields as $key => $value) {
-            $column .= "`{$key}` = :{$key}";
+            if($opt){
+                if( is_string($opt) && $opt == self::$concat):
+                    $column .= "`{$key}` = " . $this->concat($key, ":{$key}");
+                    elseif( is_array($opt) && $opt['name'] == self::$math):
+                        $column .= "`{$key}` = ". $this->mathWith($key, $opt['operator'], ":{$key}");
+                    elseif( is_array($opt) && $opt['name'] == self::$replace):
+                        $column .= "`{$key}` = ". $this->replace($key, $opt['from'], ":{$key}");
+                endif;
+            }else{
+                $column .= "`{$key}` = :{$key}";
+            }
+
             if($i < count($fields)){
                 $column .= ', ';
             }
@@ -231,6 +245,23 @@ use PDOException;
     private function _on($on){
         $this->query .= " ON $on";
         return $this;
+    }
+    private function _inset($needle, $heystack){
+        $this->query .= "FIND_IN_SET('$needle', $heystack)";
+        return $this;
+    }
+    private function _concatWs($column, $string){
+        return "CONCAT_WS($column, '$string')";
+    }
+    private function _concat($column, $string){
+        return "CONCAT($column, $string)";
+    }
+    private function _replace($column, $from, $to){
+        return "REPLACE($column, '$from', $to)";
+    }
+    private function _mathWith($column, $operator, $value)
+    {
+        return "$column $operator $value";
     }
     private function _obj(){
         $this->obj = true;

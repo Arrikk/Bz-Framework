@@ -14,15 +14,16 @@ class View
      * 
      * @return void 
      */
-    public static function draw($view = null, $args = [], $autoload = true){
+    public static function draw($view = null, $args = [], $autoload = false){
         if($autoload){
             self::autoload();
         }
         extract($args, EXTR_SKIP);
-        $__page = '';   
-        if(preg_match('/\{([^\}]+)\}/i', $view, $matches)){
+        $__page = '';
+        $views = "{ $view }";
+        if(preg_match('/\{(?P<name>[^\}]+)\}/i', "$views", $matches)){
             $view = 'index.php';
-            $__page = $matches[1];
+            $__page = str_replace(' ', '', $matches['name']);
         }
         $file = 'App/Views/'.$view;
 
@@ -32,6 +33,24 @@ class View
             echo "$file Not Found";
         }
     }
+    public static function component($view = null, $args = []){
+
+        extract($args, EXTR_SKIP);
+        $__page = '';
+        $views = "{ $view }";
+        if(preg_match('/\{(?P<name>[^\}]+)\}/i', "$views", $matches)){
+            $__page = str_replace(' ', '', $matches['name']);
+        }
+        $file = "App/Views/components/$__page.php";
+
+        if(is_readable($file)){
+            require $file;
+        }else{
+            echo "$file Not Found";
+        }
+    }
+
+
 
     /**
      * Autoload component files 

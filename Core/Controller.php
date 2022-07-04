@@ -2,6 +2,7 @@
 namespace Core;
 use App\Auth;
 use App\Flash;
+use Core\Http\Res;
 
 /**
  * Base Controller
@@ -95,8 +96,8 @@ abstract class Controller
         if(! Auth::getUser()){
             Auth::rememberRequestedPage();
             // Flash::addMessage('Login First', Flash::INFO);
-            $this->redirect('/login');
             return \http_response_code(401);
+            $this->redirect('/login');
         }
     }
 
@@ -112,6 +113,18 @@ abstract class Controller
             $this->redirect('/master');
             return \http_response_code(401);
         }
+    }
+
+    protected function required(array $data = [])
+    {
+        $error = [];
+        foreach ($data as $key => $value) {
+            if($value == '' || empty($value)):
+                $error[$key] = $key.' is Required';
+            endif;
+        }
+        if(!empty($error)) Res::status(400)->json(['error' => $error]);
+        return true;
     }
 
     protected function contact($a, $b, $c){

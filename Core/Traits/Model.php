@@ -87,6 +87,7 @@ trait Model
      */
     private static function findById(int $id, string $field = 'id', string $extract = '*', bool $exec = true)
     {
+        
         return static::findOne([$field => $id], $extract, $exec);
     }
 
@@ -109,9 +110,9 @@ trait Model
      * @param bool $exec set to defaultly to true. set to false only to see your query
      * @return mixed
      */
-    private static function findAndUpdate(array $array, array $update, bool $exec = true)
+    private static function findAndUpdate(array $array, array $update, $extra = null,  bool $exec = true)
     {
-        $prep = static::update(static::$table, $update);
+        $prep = static::update(static::$table, $update, $extra);
         $prep = static::runMultiple($array, $prep);
         if ($exec) :
             $prep = $prep->exec();
@@ -128,7 +129,7 @@ trait Model
      */
     private static function findAndDelete(array $array, bool $exec = true)
     {
-        $prep = static::trash(static::$table, $array);
+        $prep = static::trash(static::$table);
         $prep = static::runMultiple($array, $prep);
         if ($exec) :
             $prep = $prep->exec();
@@ -141,7 +142,7 @@ trait Model
      * More Query Method FIND_IN_SET
      * @return string
      */
-    private static function inset($value,  $field)
+    private static function inset($value, $field)
     {
         return "FIND_IN_SET('$value', $field)";
     }
@@ -181,7 +182,7 @@ trait Model
             $save = $save->lid()->exec();
             return static::findById($save);
         endif;
-        return $save->get();
+        return $save->get(); 
     }
     
     // /**

@@ -5,13 +5,23 @@ abstract class Component {
 
     static function __callStatic($name, $arguments)
     {
-        $method = '__'.$name;
         $static = (new static);
-        if(method_exists($static, $method)){
-            call_user_func_array([$static, $method], $arguments);
-        }else{
-            echo $method."Dosen't Exist";
-        }
+        return $static->call($name, $arguments);
 
+    }
+
+    private function call($method, $arguments){ 
+        $method = '_'.$method;
+        if(method_exists($this, $method)):
+            return $this->{$method}(...$arguments);
+        else:
+            echo "You have not created $method method";
+        endif;
+        
+    }
+
+    public function _render()
+    {
+        return true;
     }
 }

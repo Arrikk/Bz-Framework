@@ -72,6 +72,14 @@ class Router
     {
         $this->routes[$this->method]['method'] = 'POST';
     }
+    public function put()
+    {
+        $this->routes[$this->method]['method'] = 'PUT';
+    }
+    public function delete()
+    {
+        $this->routes[$this->method]['method'] = 'DELETE';
+    }
 
     /**
      * Get routes
@@ -137,13 +145,17 @@ class Router
 
                 $controller_obj = new $controller($this->params);
 
-                $action = $this->convertToCamelCase($this->params['action']);
+                $action = $this->convertToCamelCase($this->params['action'] ?? $this->params['controller']);
 
                 if (is_callable([$controller_obj, $action])) {
                     if ($this->params['method'] == 'GET') :
                         $controller_obj->$action(Request::get());
                         elseif ($this->params['method'] == 'POST') :
                         $controller_obj->$action(Request::post());
+                        elseif ($this->params['method'] == 'PUT') :
+                        $controller_obj->$action(Request::put());
+                        elseif ($this->params['method'] == 'DELETE') :
+                        $controller_obj->$action(Request::delete());
                     endif;
                 } else {
                     throw new \Exception("Method $action in Controller class $controller not Found");

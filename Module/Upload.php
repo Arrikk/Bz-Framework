@@ -3,7 +3,7 @@
 namespace Module;
 
 use Core\Model;
-use Core\Res;
+use Core\Http\Res;
 
 /**
  * Upload Model
@@ -41,8 +41,8 @@ final class Upload extends Model
      */
     private function folder()
     {
-        $folder_path = 'Public/asset/images/'.date('Y');
-        if (is_readable($folder_path)) :
+        $folder_path = FILE_PATH.'/'.date('Y');
+        if (is_readable($folder_path) || is_dir($folder_path)) :
             $this->dir = $folder_path;
         else :
             if (mkdir($folder_path)) $this->dir = $folder_path;
@@ -105,9 +105,9 @@ final class Upload extends Model
         return $this;
     }
 
-    public static function upload($upload)
+    public static function upload($upload, $name = 'image')
     {
-        $class = new Upload($upload);
+        $class = new Upload($upload[$name]);
         $save = $class->fileSize()->ext()->folder();
 
         if(!$class->ext){
