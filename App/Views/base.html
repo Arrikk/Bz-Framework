@@ -1,0 +1,52 @@
+<html lang="en">
+  <head>
+      <base href="/Public" />
+      <meta charset="utf-8" />
+    <meta name="author" content="Softnio" />
+    <meta
+    name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers."
+      />
+      <!-- Fav Icon  -->
+    <link rel="shortcut icon" href="/Public/images/favicon.png" />
+    <!-- Page Title  -->
+      <title>{% block title %} {% endblock %}</title>
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href="/Public/assets/css/dashlite.css?ver=3.0.0" />
+    <link
+      id="skin-default"
+      rel="stylesheet"
+      href="/Public/assets/css/theme.css?ver=3.0.0"
+    />
+  </head>
+
+  <body class="nk-body bg-white npc-default pg-error">
+    <div class="nk-app-root">
+      <!-- main @s -->
+      <div class="nk-main">
+        <!-- wrap @s -->
+        <div class="nk-wrap nk-wrap-nosidebar">
+          <!-- content @s -->
+          <div class="nk-content">
+                {% block body %} {% endblock %}
+              </div>
+            </div>
+            <!-- .nk-block -->
+          </div>
+          <!-- wrap @e -->
+        </div>
+        <!-- content @e -->
+      </div>
+      <!-- main @e -->
+    </div>
+
+    <script src="/Public/assets/js/bundle.js?ver=3.0.0"></script>
+    <script src="/Public/assets/js/scripts.js?ver=3.0.0"></script>
+    <script src="/Public/js/axios.min.js"></script>
+    {% block script %} {% endblock %}
+  </body>
+</html>

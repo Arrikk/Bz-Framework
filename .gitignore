@@ -1,0 +1,27 @@
+# OS
+*~
+*.bak
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+/.buildpath
+/.project
+/.settings
+/.idea
+/.vscode
+/.history
+
+# Application, Framework
+.vagrant
+yarn-error.log
+npm-debug.log
+node_modules
+
+# Project
+/logs/*
+/Public/files/*
+/vendor
+!.gitkeep
+

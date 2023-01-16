@@ -1,0 +1,21 @@
+{
+    "require": {
+        "twig/twig": "~1.0",
+        "simplehtmldom/simplehtmldom": "~v2.0-RC2",
+        "samayo/bulletproof": "4.0.*",
+        "phpmailer/phpmailer": "^6.6",
+        "ext-gd": "*",
+        "guzzlehttp/guzzle": "^7.5"
+    },
+    "config": {
+        "platform-check": false
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core/",
+            "App\\": "App/",
+            "Router\\": "Router/",
+            "Module\\": "Module/"
+        }
+    }
+}
