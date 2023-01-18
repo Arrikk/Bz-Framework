@@ -3,6 +3,7 @@
 namespace Core\Router;
 
 use Core\Calls\Override;
+use Core\Http\Res;
 use Core\Interfaces\Router as InterfacesRouter;
 use Core\Request;
 use Router\Route;
@@ -213,8 +214,8 @@ class Router extends Override implements InterfacesRouter
 
     public function call_array(array $params = [])
     {
-        $class = $params[0];
-        $method = $params[1];
+        $class = isset($params[0]) ? $params[0] : null;
+        $method = isset($params[1]) ? $params[1] : null;
 
         if (isset($params['binding'])) :
             extract($params['binding']);
