@@ -5,6 +5,9 @@ define('IP_ADDRESS', GetIpAddress());
 define('BROWSER', GetBrowser());
 
 define('LOGIN_LIMIT', 3);
+define('LIMIT', 3);
+define('ASC', 'ASC');
+define('DESC', 'DESC');
 
 # account verification status
 define('NOT_VERIFIED', '0');
