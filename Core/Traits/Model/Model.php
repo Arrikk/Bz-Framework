@@ -50,8 +50,6 @@ trait Model
 
     private static function table()
     {
-
-        echo self::$isTable;
         $class = explode('\\', get_called_class());
         $class = strtolower(end($class)) . 's';
 
