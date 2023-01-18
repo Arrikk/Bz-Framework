@@ -12,25 +12,18 @@ class Home extends Controller
         Res::send('
         <pre> 
         ---
-        title: ARUKU API
-        slug: Web/API/ARUKU_API
+        title: CODEHART
+        slug: Web/API/BRUIZ
         page-type: web-api-overview
         tags:
           - API
-          - ARUKU API
-          - Steps
-          - Walk
-          - Experimental
-          - Active
-          - Points
+          - WEB
+          - Models
+          - Controlers
+          - Views
+          - Routes
         ---
         </pre>
         ');
-    }
-
-
-    public function get()
-    {
-      
     }
 }
