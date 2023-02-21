@@ -2,8 +2,10 @@
 
 namespace Core;
 
+use AllowDynamicProperties;
 use Core\Http\Res;
 
+#[AllowDynamicProperties]
 class Request
 {
     public $request;

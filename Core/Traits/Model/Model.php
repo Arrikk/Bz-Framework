@@ -63,7 +63,7 @@ trait Model
      * set $self to false to return bool true or false instead
      * @return mixed integer if $self is true and bool otherwise
      */
-    protected static function find(array $array = [], string $query = '*', bool $exec = true)
+    public static function find(array $array = [], string $query = '*', bool $exec = true)
     {
         $prep = static::select($query, self::table());
         if (!empty($array)) {

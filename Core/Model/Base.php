@@ -2,6 +2,7 @@
 
 namespace Core\Model;
 
+use AllowDynamicProperties;
 use PDO;
 use App\Config;
 use PDOException;
@@ -13,6 +14,7 @@ use PDOException;
  * ==============================================
  */
 
+ #[AllowDynamicProperties]
 abstract class Base
 {
     protected $i = 0;

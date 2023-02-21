@@ -24,7 +24,7 @@ trait Relationship
         $classPlulraRmv = $matchColumn == null ? substr($currClass, 0, strlen($currClass) - 1) . '_id' : $matchColumn;
 
         if (!$this->paginate)
-            return $model::use($table == null ? $this->getCalledClass($model) : $table)::find([$classPlulraRmv => $this->id]);
+            return $model::use($table == null ? $this->getCalledClass($model) : $table)::find([$classPlulraRmv => $this->id, '$.order' => 'id '. DESC]);
 
         $page = Paginate::page($this->paginateOptions);
         return $model::use($table == null ? $this->getCalledClass($model) : $table)::find([

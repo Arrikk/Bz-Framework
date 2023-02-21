@@ -57,7 +57,6 @@ class Error
             $message .= "<p>Message: '".$exception->getMessage()."'</p>";
             $message .= "<p>Stack Trace: <pre>".$exception->getTraceAsString()."</pre></p>";
             $message .= "<p>Throw in '".$exception->getFile()."' on line ".$exception->getLine()."</p>";
-
             error_log($message);
 
             View::render("$code.html");
