@@ -2,8 +2,17 @@
 
 namespace Core\Router;
 
+use Dotenv\Dotenv;
+
 class Route
 {
+
+    public static function ENV()
+    {
+        // echo dirname(__DIR__)."Hone";
+        $dotenv = Dotenv::createImmutable('Public/');
+        $dotenv->load();
+    }
 
     public static function Route()
     {
@@ -11,8 +20,8 @@ class Route
         $router = new Router;
         require 'Router/Routes.php';
         require 'Utils/utils.php';
-        require 'App/Variables.php';        
-        
+        require 'App/Variables.php';
+
         /**
          * Match the Requested Url
          */
