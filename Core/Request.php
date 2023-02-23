@@ -4,6 +4,7 @@ namespace Core;
 
 use AllowDynamicProperties;
 use Core\Http\Res;
+use Core\Pipes\Pipes;
 
 #[AllowDynamicProperties]
 class Request
@@ -11,10 +12,10 @@ class Request
     public $request;
     function __construct($data)
     {
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
-        return $this;
+        // foreach ($data as $key => $value) {
+        //     $this->$key = $value;
+        // }
+        // return $this;
     }
 
     public static function cors()
@@ -46,6 +47,7 @@ class Request
         $request = new Request($_GET);
         return $request;
     }
+
     public static function post()
     {
         self::cors();
@@ -55,7 +57,7 @@ class Request
             Res::status(404)->json(['error' => "Post Not Found"]);
             if(empty($data) && empty($_POST) && empty($_FILES)) Res::status(403)->json(['error' => "Invalid Request"]);
             // Res::status(403)->json(['error' => $_FILES ?? $data]);
-        $request = new Request($data ?? $_POST ?? $_FILES);
+        $request = new Pipes($data ?? $_POST ?? $_FILES);
         return $request;
     }
     public static function put()
@@ -65,7 +67,7 @@ class Request
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST')
             throw new \Exception("POST not Found");
-        $request = new Request($_POST);
+        $request = new Pipes($_POST);
         return $request;
     }
     public static function delete()
@@ -75,7 +77,7 @@ class Request
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST')
             throw new \Exception("POST not Found");
-        $request = new Request($_POST);
+        $request = new Pipes($_POST);
         return $request;
     }
 }
