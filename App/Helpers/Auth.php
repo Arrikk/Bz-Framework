@@ -81,7 +81,7 @@ class Auth extends User
 
     public static function login($email, $password)
     {
-        $loggedIn = self::authenticate(Secure($email), $password);
+        $loggedIn = User::authenticate(Secure($email), $password);
         if (!$loggedIn) {
             // self::badLogin();
             Res::status(400)->error([
@@ -92,8 +92,13 @@ class Auth extends User
         };
 
         if ($loggedIn) :
+            $token =  Token::mkToken('enc', json_encode([
+                'id' => (int) $loggedIn->id,
+                '_id' => $loggedIn->_id,
+                'expires' => strtotime('+1MONTH')
+            ]));
             // self::loginSession($loggedIn->id);
-            return $loggedIn;
+            return $loggedIn->append(['token' => $token]);
         endif;
     }
 }

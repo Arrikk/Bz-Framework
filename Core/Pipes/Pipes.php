@@ -25,12 +25,6 @@ class Pipes extends PipeValidations
 
     public function __call($name, $arguments)
     {
-        $call = $this->__($name);
-        return $call;
-    }
-
-    public function __($name)
-    {
         $this->pipe_property_name = $name;
         $this->pipe_property_value = $this->$name;
         return $this;
@@ -38,7 +32,7 @@ class Pipes extends PipeValidations
 
     public function pipe($pipes = [])
     {
-        if(isset($this->pipe_validation_error) && !empty($this->pipe_validation_error)) return (object) $this->pipe_validation_error;
-        return $pipes;
+        if(isset($this->pipe_validation_error) && !empty($this->pipe_validation_error)) Res::status(400)::error($this->pipe_validation_error);
+        return (object) $pipes;
     }
 }

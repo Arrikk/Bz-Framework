@@ -8,16 +8,16 @@ use AllowDynamicProperties;
 abstract class PipeValidations
 {
 
-    public function int(string $message = null): PipeValidations
+    public function isint(string $message = null): PipeValidations
     {
         if (!is_int($this->pipe_property_value))
             return $this->setError($this->pipe_property_name, $message ?? "Value must be an integer");
         return $this;
     }
 
-    public function string(int $message = null): PipeValidations
+    public function isstring(int $message = null): PipeValidations
     {
-        if (!is_int($this->pipe_property_value))
+        if (!is_string($this->pipe_property_value))
             return $this->setError($this->pipe_property_name, $message ?? "Value must be a string");
         return $this;
     }
@@ -36,10 +36,29 @@ abstract class PipeValidations
         return $this;
     }
 
-    public function is_email(string $message = null)
+    public function isemail(string $message = null): PipeValidations
     {
         if (!filter_var($this->pipe_property_value, FILTER_VALIDATE_EMAIL))
             return $this->setError($this->pipe_property_name, $message ?? "Value requires a valid email address");
+        return $this;
+    }
+
+    public function is_strong_password(string $message = null): PipeValidations
+    {
+       return $this;
+    }
+
+    public function isrequired(string $message = null): PipeValidations
+    {
+        if(empty($this->pipe_property_value))
+        return $this->setError($this->pipe_property_name, $message ?? "Value cannot be empty");
+        return $this;
+    }
+
+    public function isurl(string $message = null): PipeValidations
+    {
+        if(!filter_var($this->pipe_property_value, FILTER_VALIDATE_URL))
+        return $this->setError($this->pipe_property_name, $message ?? "Value Requires a valid URL");
         return $this;
     }
 

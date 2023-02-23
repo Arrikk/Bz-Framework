@@ -1,81 +1,86 @@
 <?php
 namespace App;
 
-use AllowDynamicProperties;
-
 /**
- * Token Hashes
+ * Flash Messages
  */
 
- #[AllowDynamicProperties]
-class Token
+class Flash
 {
     /**
-     * The token value
+     * Add success alert message
      * 
-     * @var array
+     * @var string
      */
-    protected $token;
+    const SUCCESS = 'success';
 
     /**
-     * Class Constructor create a new random token
+     * Add info alert message
+     * 
+     * @var string
+     */
+    const INFO = 'info';
+
+    /**
+     * Add warning alert message
+     * 
+     * @var string
+     */
+    const WARNING = 'warning';
+
+    /**
+     * Add danger alert message
+     * 
+     * @var string
+     */
+    const DANGER = 'danger';
+    /**
+     * Add default alert message
+     * 
+     * @var string
+     */
+    const DEFAULT = 'default';
+
+
+
+    /**
+     * Add a message
+     *  
+     * @param string $message The message content
      * 
      * @return void
      */
-    public function __construct($token =  null){
-        if($token){
-            $this->token = $token;
-        }else{
-            $this->token = bin2hex(random_bytes(16));
+    public static function addMessage($message, $type = 'default')
+    {
+        // Create array in message if it dosent already exists
+        if(! isset($_SESSION['flash_notification'])){
+            $_SESSION['flash_notification'] = [];
         }
+
+        // Append to the flash message array 
+        $_SESSION['flash_notification'][] = [
+            'message' => $message,
+            'type' => $type
+        ];
     }
 
     /**
-     * Get token value
+     * Get all messages
      * 
-     * @return string The value
+     * @return mixed an array with all messages or null if empty
      */
-    public function getValue() 
+    public static function getMessage()
     {
-        return $this->token;
-    }
+        if(\App\Config::FLASH):
 
-    /**
-     * Get Hashed token
-     * 
-     * @return string
-     */
-    public function getHashed()
-    {
-        return hash_hmac('sha256', $this->token, \App\Config::SECRET_KEY);
-    }
+            if(isset($_SESSION['flash_notification'])){
+                $message = $_SESSION['flash_notification'];
+                unset($_SESSION['flash_notification']);
+                return $message;
+            }
 
-     /**
-     * Encrypt and decrypt data ..(message, string, int, func etc...)
-     * @param string $type Encrypt = enc Decrypt = dec
-     * @param string $string any
-     * @return string
-     */
-    public static function mkToken($type, $string)
-    {
-        $output = '';
+        endif;
 
-        $enc_type = 'AES-256-CBC';
-        $secret = \App\Config::SECRET_KEY;
-        $secret_iv = \substr($secret, 0, 14);
-
-        $key = \hash('sha256', $secret);
-        $initVect = \substr(\hash('sha256', $secret_iv), 0, 16);
-
-        if ($type == 'enc') {
-            $output = \openssl_encrypt($string, $enc_type, $key, 0, $initVect);
-            $output = \base64_encode($output);
-        }
-        if ($type == 'dec') {
-            $output = \base64_decode($string);
-            $output = \openssl_decrypt($output, $enc_type, $key, 0, $initVect);
-        }
-
-        return $output;
+        return false;
     }
 }

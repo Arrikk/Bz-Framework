@@ -2,6 +2,8 @@
 
 namespace Core\Traits\User;
 
+use App\Models\User;
+use App\Token;
 use Core\Http\Res;
 
 /**
@@ -29,20 +31,18 @@ trait Extended
      */
     public static function save($data = null)
     {
-        // $This = new User($data);
-        // $token = new Token();
-        // $This->hashed = $token->getHashed();
-        // $This->token = $token->getValue();
+        $This = new static($data);
+        $token = new Token();
+        $This->hashed = $token->getHashed();
+        $This->token = $token->getValue();
 
-        // $This->validate();
+        $This->validate();
+        if (!empty($This->errors)) Res::status(400)::error($This->errors);
 
-        // if (empty($This->errors)) {
-        //     $This->password = password_hash($This->password, PASSWORD_DEFAULT);
-        //     $user = $This->dump((array) Columns::columns($This));
-        //     unset($user->password);
-        //     return $user;
-        // };
-        // Res::status(400)::error($This->errors);
+        $This->password = password_hash($This->password, PASSWORD_DEFAULT);
+        $user = $This->dump((array) $data);
+        unset($user->password);
+        return $user;
     }
 
     public static function isVerified($id)
@@ -74,11 +74,14 @@ trait Extended
      */
     protected function validate()
     {
-        // if ($this->userExists($this->email, $this->id ?? null))
-        //     $this->errors['email'] = 'Email already exists';
-        // if ($this->userExists($this->username, $this->id ?? null))
-        //     $this->errors['username'] = 'Username already exists';
-        // // if (isset($this->password) && !empty($this->password)) {
+        if (isset($this->email))
+            if ($this->userExists($this->email, $this->id ?? null))
+                $this->errors['email'] = 'Email already exists';
+
+        if (isset($this->username))
+            if ($this->userExists($this->username, $this->id ?? null))
+                $this->errors['username'] = 'Username already exists';
+        // if (isset($this->password) && !empty($this->password)) {
         // if ($this->password == '')
         //     $this->errors[] = 'Password cannot be empty';
         // if (!preg_match('/.*\d+.*/', $this->password)) $this->errors[] = 'Password Must contain atleast a number';
@@ -132,7 +135,7 @@ trait Extended
     {
         // extract($array);
         $user = self::findByEmail($email);
-        
+
         if (!$user) return false;
         if (!password_verify($password, $user->password_hash)) return false;
         return $user;
@@ -144,13 +147,12 @@ trait Extended
         if (!$user) Res::status(404)->json(['error' => 'User not Found']);
         return $user;
     }
-    
+
     public static function getUserBy($data)
     {
         $user = self::findOne($data);
         if (!$user) Res::status(404)->json(['error' => 'User not Found']);
         return $user;
-        
     }
     // ---------------------------------------------------------------
     // ---------------------------------------------------------------
