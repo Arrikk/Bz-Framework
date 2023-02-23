@@ -62,6 +62,13 @@ abstract class PipeValidations
         return $this;
     }
 
+    public function isequal($comparison, string $message = null): PipeValidations
+    {
+        if($this->pipe_property_value !== $comparison)
+        return $this->setError($this->pipe_property_name, $message ?? "Equality Error");
+        return $this;
+    }
+
     public function setError(string $pipe, string $error): PipeValidations
     {
         if (isset($this->pipe_validation_error[$pipe])) {

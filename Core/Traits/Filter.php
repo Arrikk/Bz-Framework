@@ -12,7 +12,7 @@ trait Filter
         return $object;
     }
 
-    public function remove() :Filter
+    public function remove()
     {
         $args = func_get_args();
         $object = $this->objectFilter;
@@ -26,7 +26,7 @@ trait Filter
         return $this;
     }
 
-    public function append(): Filter
+    public function append()
     {
         $args = func_get_arg(0);
         $object = $this->objectFilter;
@@ -40,7 +40,7 @@ trait Filter
         return $this;
     }
 
-    public function only() :Filter
+    public function only()
     {
         $args = func_get_args();
         $object = $this->objectFilter;

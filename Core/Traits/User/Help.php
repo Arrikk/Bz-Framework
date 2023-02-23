@@ -71,7 +71,7 @@ trait Help
         $user = self::findByEmail($email);
         if (!$user) Res::status(400)->error(['message' => 'Request not found', "email" => "invalid email addrss"]);
         $user->useToken()->startPasswordReset();
-        // if (!$user->forgotEmail()) Res::status(400)->json(['error' => 'Unable to send verification email']);
+        if (!$user->forgotEmail()) Res::status(400)->json(['error' => 'Unable to send verification email']);
         Res::json(['message' => 'Email Successfully sent']);
     }
 

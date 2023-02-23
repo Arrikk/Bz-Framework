@@ -12,7 +12,7 @@ class Pipes extends PipeValidations
     {
 
         foreach ($data as $key => $value) {
-            $this->$key = $value;
+            $this->{$key} = $value;
         }
         return $this;
     }
@@ -20,13 +20,13 @@ class Pipes extends PipeValidations
 
     public function __set($name, $value)
     {
-        $this->$name = $value;
+        $this->{$name} = $value;
     }
 
     public function __call($name, $arguments)
     {
         $this->pipe_property_name = $name;
-        $this->pipe_property_value = $this->$name;
+        $this->pipe_property_value = isset($this->$name) ? $this->$name : null;
         return $this;
     }
 

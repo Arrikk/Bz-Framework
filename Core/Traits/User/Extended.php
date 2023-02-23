@@ -39,9 +39,10 @@ trait Extended
         $This->validate();
         if (!empty($This->errors)) Res::status(400)::error($This->errors);
 
-        $This->password = password_hash($This->password, PASSWORD_DEFAULT);
-        $user = $This->dump((array) $data);
-        unset($user->password);
+        $password = password_hash($This->password_hash, PASSWORD_DEFAULT);
+        $data->password_hash = $password;
+
+        $user = $This->dump((array) $data)->remove('password_hash');
         return $user;
     }
 
@@ -134,7 +135,7 @@ trait Extended
     public static function authenticate($email, $password)
     {
         // extract($array);
-        $user = self::findByEmail($email);
+        $user = User::findByEmail($email);
 
         if (!$user) return false;
         if (!password_verify($password, $user->password_hash)) return false;
