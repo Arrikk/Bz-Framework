@@ -14,19 +14,19 @@ class Config
      * 
      * @var string
      */
-    public static $DB_HOST = 'localhost';
+    public static $DB_HOST = '';
     /**
      * DB name
      * 
      * @var string
      */
-    public static $DB_NAME = 'naijaconnect';
+    public static $DB_NAME = '';
     /**
      * DB username
      * 
      * @var string
      */
-    public static $DB_USER = 'root';
+    public static $DB_USER = '';
     /**
      * DB Password
      * 
@@ -68,20 +68,12 @@ class Config
 
     public static function clearDB()
     {
-        $url = "mysql://b2decb00293d0c:1c909481@us-cdbr-east-06.cleardb.net/heroku_55850ce38f770e4?reconnect=true";
-
         $cleardbURl = parse_url(getenv('CLEARDB_DATABASE_URL'));
-
         // $cleardbURl = parse_url($url);
-
-        self::$DB_HOST = $cleardbURl['host'] ?? 'localhost';
-        self::$DB_PASSWORD = $cleardbURl['pass'] ?? 'mysql';
-        self::$DB_USER = $cleardbURl['user'] ?? 'root';
-
-        $name = $cleardbURl['path'] ?? null;
-        if($name) $name = str_replace('/', '', $name);
-
-        self::$DB_NAME =  $name ? $name : 'aruku';
+        self::$DB_HOST = $cleardbURl['host'] ?? $_ENV['DB_HOST'];
+        self::$DB_PASSWORD = $cleardbURl['pass'] ?? $_ENV['DB_PASSWORD'];
+        self::$DB_USER = $cleardbURl['user'] ?? $_ENV['DB_USER'];
+        self::$DB_NAME = str_replace('/', '', ($cleardbURl['path'] == "" ? $_ENV['DB_NAME'] : $cleardbURl['path']));
     }
 }
             

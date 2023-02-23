@@ -18,3 +18,10 @@ define('CURRENT_TIME', time());
 define('CURRENT_DATE', date('Y-m-d H:i:s'));
 
 define('FILE_PATH', 'Public/images');
+
+define('SMTP_HOST', $_ENV['SMTP_HOST']);
+define('SMTP_PORT', $_ENV['SMTP_PORT']);
+define('SMTP_SECURE', $_ENV['SMTP_SECURE']);
+define('SMTP_USERNAME', $_ENV['SMTP_USERNAME']);
+define('SMTP_PASSWORD', $_ENV['SMTP_PASSWORD']);
+define('MAIL_FROM', $_ENV['MAIL_FROM']);
