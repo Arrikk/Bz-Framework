@@ -13,8 +13,15 @@ abstract class PipeValidations
 
     public function isint(string $message = null): PipeValidations
     {
-        if (!is_int($this->pipe_property_value))
+        if (!is_int( (int) $this->pipe_property_value))
             return $this->setError($this->pipe_property_name, $message ?? "Value must be an integer");
+        return $this;
+    }
+
+    public function isfloat(string $message = null): PipeValidations
+    {
+        if (!is_float( (float) $this->pipe_property_value))
+            return $this->setError($this->pipe_property_name, $message ?? "Value must be Float");
         return $this;
     }
 

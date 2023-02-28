@@ -44,13 +44,12 @@ class Request
     public static function get()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $request = new Request($_GET);
+        $request = new Pipes($_GET);
         return $request;
     }
 
     public static function post()
     {
-        self::cors();
         $json = file_get_contents('php://input');
         $data = json_decode($json);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST')
@@ -60,23 +59,20 @@ class Request
         $request = new Pipes($data ?? $_POST ?? $_FILES);
         return $request;
     }
+
     public static function put()
     {
-        header('Content-Type: application/json');
-        header('Access-Control-Allow-Origin: *');
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-            throw new \Exception("POST not Found");
-        $request = new Pipes($_POST);
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+        if ($_SERVER['REQUEST_METHOD'] !== 'PUT')
+            throw new \Exception("PUT not Found");
+        $request = new Pipes($data);
         return $request;
     }
     public static function delete()
     {
-        header('Content-Type: application/json');
-        header('Access-Control-Allow-Origin: *');
-
         if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-            throw new \Exception("POST not Found");
+            throw new \Exception("\DELETE not Found");
         $request = new Pipes($_POST);
         return $request;
     }
