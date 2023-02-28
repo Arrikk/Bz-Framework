@@ -5,6 +5,7 @@ namespace Core\Pipes;
 use AllowDynamicProperties;
 use Core\Http\Req;
 use Core\Http\Res;
+use Random\Engine\Secure;
 
 class Pipes extends PipeValidations
 {
@@ -25,8 +26,8 @@ class Pipes extends PipeValidations
 
     public function __call($name, $arguments)
     {
-        $this->pipe_property_name = $name;
-        $this->pipe_property_value = isset($this->$name) ? $this->$name : null;
+        $this->pipe_property_name = Secure($name);
+        $this->pipe_property_value = isset($this->$name) ? Secure($this->$name ): null;
         return $this;
     }
 
