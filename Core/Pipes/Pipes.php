@@ -9,6 +9,7 @@ use Random\Engine\Secure;
 
 class Pipes extends PipeValidations
 {
+    
     public function __construct($data)
     {
 
@@ -24,16 +25,21 @@ class Pipes extends PipeValidations
         $this->{$name} = $value;
     }
 
+    public function __get($name)
+    {
+        // return $name;
+    }
+
     public function __call($name, $arguments)
     {
         $this->pipe_property_name = Secure($name);
-        $this->pipe_property_value = isset($this->$name) ? Secure($this->$name ): null;
+        $this->pipe_property_value = Secure(isset($this->$name) ? $this->$name : null);
         return $this;
     }
 
     public function pipe($pipes = [])
     {
-        if(isset($this->pipe_validation_error) && !empty($this->pipe_validation_error)) Res::status(400)::error($this->pipe_validation_error);
+        if (isset($this->pipe_validation_error) && !empty($this->pipe_validation_error)) Res::status(400)::error($this->pipe_validation_error);
         return (object) $pipes;
     }
 }

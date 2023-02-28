@@ -3,10 +3,13 @@
 namespace Core\Pipes;
 
 use AllowDynamicProperties;
+use Core\Http\Res;
 
 #[AllowDynamicProperties]
 abstract class PipeValidations
 {
+
+    public array $pipe_validation_error = [];
 
     public function isint(string $message = null): PipeValidations
     {
@@ -50,6 +53,8 @@ abstract class PipeValidations
 
     public function isrequired(string $message = null): PipeValidations
     {
+
+        // Res::json(empty($this->pipe_property_value));
         if(empty($this->pipe_property_value))
         return $this->setError($this->pipe_property_name, $message ?? "Value cannot be empty");
         return $this;
@@ -77,6 +82,11 @@ abstract class PipeValidations
                 $this->pipe_validation_error[$pipe] = [$pipeError, $error];
             } else $this->pipe_validation_error[$pipe][] = $error;
         } else $this->pipe_validation_error[$pipe] = $error;
+        return $this;
+    }
+
+    public function isenum(): PipeValidations
+    {
         return $this;
     }
 }
