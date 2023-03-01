@@ -24,7 +24,7 @@ class Req extends Override implements InterfacesReq
 
     public static function sleek($body = [], $headers = []): Guzzle
     {
-        return new Guzzle();
+        return new Guzzle($body, $headers);
         // return Guzzle::class;
     }
 }
