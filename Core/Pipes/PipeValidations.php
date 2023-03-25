@@ -18,6 +18,12 @@ abstract class PipeValidations
         return $this;
     }
 
+    public function isnumeric(string $message = null): PipeValidations
+    {
+        if (!is_numeric($this->pipe_property_value))
+            return $this->setError($this->pipe_property_name, $message ?? "Value must be Float");
+        return $this;
+    }
     public function isfloat(string $message = null): PipeValidations
     {
         if (!is_float( (float) $this->pipe_property_value))
