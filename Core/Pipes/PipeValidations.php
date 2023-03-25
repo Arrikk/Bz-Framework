@@ -13,7 +13,8 @@ abstract class PipeValidations
 
     public function isint(string $message = null): PipeValidations
     {
-        if (!is_int($this->pipe_property_value))
+        // die(var_dump((int) $this->pipe_property_value));
+        if (!is_int((int) $this->pipe_property_value))
             return $this->setError($this->pipe_property_name, $message ?? "Value must be an integer");
         return $this;
     }
@@ -87,6 +88,13 @@ abstract class PipeValidations
         return $this;
     }
 
+    public function isenum(): PipeValidations
+    {
+        if(!in_array($this->pipe_property_value, func_get_args()))
+        return $this->setError($this->pipe_property_name, $message ?? "Option Error.. Check Value..");
+        return $this;
+    }
+
     public function setError(string $pipe, string $error): PipeValidations
     {
         if (isset($this->pipe_validation_error[$pipe])) {
@@ -95,11 +103,6 @@ abstract class PipeValidations
                 $this->pipe_validation_error[$pipe] = [$pipeError, $error];
             } else $this->pipe_validation_error[$pipe][] = $error;
         } else $this->pipe_validation_error[$pipe] = $error;
-        return $this;
-    }
-
-    public function isenum(): PipeValidations
-    {
         return $this;
     }
 }
