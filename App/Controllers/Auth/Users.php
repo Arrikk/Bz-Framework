@@ -10,7 +10,7 @@ use Core\Controller;
 use Core\Http\Res;
 use Core\Pipes\Pipes;
 
-class Users extends Controller
+class Users extends AuthPipe
 {
     /**
      * Register a new user account
@@ -19,14 +19,14 @@ class Users extends Controller
     public function register(Pipes $body)
     {
         // e.g ['username', $pipe->username]
-        $data = $body->pipe([]); // Pipe Data (DTO) ...
+        $data = $this->registerPipe($body); // Pipe Data (DTO) ...
 
         $save = (object) User::save($data);
         $apiToken = Token::mkToken('enc', json_encode([
             'id' => "",
             'expires' => strtotime('+2DAYS')
         ]));
-        Res::json($save->append(['token' => $apiToken]));
+        Res::json($save->remove(...userFilters())->append(['token' => $apiToken]));
     }
 
     /**
@@ -42,6 +42,6 @@ class Users extends Controller
 
         $auth = Auth::login($piped->email, $piped->password);
 
-        Res::json($auth->only('token'));
+        Res::json($auth);
     }
 }

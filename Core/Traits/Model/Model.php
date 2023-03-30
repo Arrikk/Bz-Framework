@@ -45,7 +45,7 @@ trait Model
     public static function use(string $tableName)
     {
         self::$isTable = $tableName;
-        return new static($tableName);
+        return new static();
     }
 
     private static function table()
@@ -85,7 +85,7 @@ trait Model
      * @param bool $exec set to defaultly to true. set to false only to see your query
      * @return object
      */
-    public function _findOne(array $array, $type = '*', bool $exec = true)
+    public static function findOne(array $array, $type = '*', bool $exec = true)
     {
         if (in_array('$.from', array_keys($array))) {
             $prep = static::select($type, '');
@@ -210,7 +210,7 @@ trait Model
      * @return mixed return boolean, string or an object depending 
      * on your second args and last
      */
-    protected static function dump(array $array, string $table = '', bool $exec = true)
+    public static function dump(array $array, string $table = '', bool $exec = true)
     {
         if ($table == '') $table = static::table();
         $save = static::create($table, $array);

@@ -94,6 +94,27 @@ abstract class PipeValidations
         return $this->setError($this->pipe_property_name, $message ?? "Option Error.. Check Value..");
         return $this;
     }
+    public function tolower(): PipeValidations
+    {
+        $this->pipe_property_value = strtolower($this->pipe_property_value);
+        return $this;
+    }
+    public function toupper(): PipeValidations
+    {
+        $this->pipe_property_value = strtoupper($this->pipe_property_value);
+        return $this;
+    }
+    public function toint(): PipeValidations
+    {
+        $this->pipe_property_value = (int) ($this->pipe_property_value);
+        return $this;
+    }
+    public function default($default): PipeValidations
+    {
+        if($this->pipe_property_value === null ) $this->pipe_property_value = $default;
+        return $this;
+    }
+
 
     public function setError(string $pipe, string $error): PipeValidations
     {
