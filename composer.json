@@ -6,7 +6,7 @@
         "phpmailer/phpmailer": "^6.6",
         "ext-gd": "*",
         "guzzlehttp/guzzle": "^7.5",
-        "vlucas/phpdotenv": "^5.5 "
+        "vlucas/phpdotenv": "^5.5"
     },
     "config": {
         "platform-check": false
