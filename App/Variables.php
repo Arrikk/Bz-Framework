@@ -25,3 +25,5 @@ define('SMTP_SECURE', $_ENV['SMTP_SECURE']);
 define('SMTP_USERNAME', $_ENV['SMTP_USERNAME']);
 define('SMTP_PASSWORD', $_ENV['SMTP_PASSWORD']);
 define('MAIL_FROM', $_ENV['MAIL_FROM']);
+
+define('SECRET_KEY', $_ENV['SECRET_KEY']);

@@ -50,7 +50,7 @@ class Config
      * 
      * @var string
      */
-    CONST SECRET_KEY = 'Op9O+=/CO3eE+9+Cs222p/qdEFeneD';
+    CONST SECRET_KEY = "";
     /**
      * Show flash message
      * 
