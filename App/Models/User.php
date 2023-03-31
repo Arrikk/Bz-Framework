@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Models\Finance\Transaction;
 use App\Models\Finance\Wallet;
 use Core\Model\Model;
 use Core\Traits\User\Extended;
@@ -21,5 +22,10 @@ class User extends Model
             'wallet_id' => $wallet_id,
             'and.user_id' => $this->id
         ]);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }
