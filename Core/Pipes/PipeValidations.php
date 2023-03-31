@@ -4,9 +4,10 @@ namespace Core\Pipes;
 
 use AllowDynamicProperties;
 use Core\Http\Res;
+use Core\Interfaces\PipeValidationInterface;
 
 #[AllowDynamicProperties]
-abstract class PipeValidations
+abstract class PipeValidations implements PipeValidationInterface
 {
 
     public array $pipe_validation_error = [];
@@ -27,7 +28,7 @@ abstract class PipeValidations
     }
     public function isfloat(string $message = null): PipeValidations
     {
-        if (!is_float( (float) $this->pipe_property_value))
+        if (!is_float((float) $this->pipe_property_value))
             return $this->setError($this->pipe_property_name, $message ?? "Value must be Float");
         return $this;
     }
@@ -62,59 +63,116 @@ abstract class PipeValidations
 
     public function is_strong_password(string $message = null): PipeValidations
     {
-       return $this;
+        return $this;
     }
 
     public function isrequired(string $message = null): PipeValidations
     {
 
         // Res::json(empty($this->pipe_property_value));
-        if(empty($this->pipe_property_value))
-        return $this->setError($this->pipe_property_name, $message ?? "Value cannot be empty");
+        if (empty($this->pipe_property_value))
+            return $this->setError($this->pipe_property_name, $message ?? "Value cannot be empty");
         return $this;
     }
 
     public function isurl(string $message = null): PipeValidations
     {
-        if(!filter_var($this->pipe_property_value, FILTER_VALIDATE_URL))
-        return $this->setError($this->pipe_property_name, $message ?? "Value Requires a valid URL");
+        if (!filter_var($this->pipe_property_value, FILTER_VALIDATE_URL))
+            return $this->setError($this->pipe_property_name, $message ?? "Value Requires a valid URL");
         return $this;
     }
 
     public function isequal($comparison, string $message = null): PipeValidations
     {
-        if($this->pipe_property_value !== $comparison)
-        return $this->setError($this->pipe_property_name, $message ?? "Equality Error");
+        if ($this->pipe_property_value !== $comparison)
+            return $this->setError($this->pipe_property_name, $message ?? "Equality Error");
         return $this;
     }
-
     public function isenum(): PipeValidations
     {
-        if(!in_array($this->pipe_property_value, func_get_args()))
-        return $this->setError($this->pipe_property_name, $message ?? "Option Error.. Check Value..");
+        if (!in_array($this->pipe_property_value, func_get_args()))
+            return $this->setError($this->pipe_property_name, $message ?? "Option Error.. Check Value..");
         return $this;
     }
     public function tolower(): PipeValidations
     {
-        $this->pipe_property_value = strtolower($this->pipe_property_value);
+        $this->{$this->pipe_property_name} = strtolower($this->pipe_property_value);
         return $this;
     }
     public function toupper(): PipeValidations
     {
-        $this->pipe_property_value = strtoupper($this->pipe_property_value);
+        $this->{$this->pipe_property_name} = strtoupper($this->pipe_property_value);
         return $this;
     }
     public function toint(): PipeValidations
     {
-        $this->pipe_property_value = (int) ($this->pipe_property_value);
+        $this->{$this->pipe_property_name} = (int) ($this->pipe_property_value);
+        return $this;
+    }
+    public function tofloat(): PipeValidations
+    {
+        $this->{$this->pipe_property_name} = (float) ($this->pipe_property_value);
+        return $this;
+    }
+    public function tostring(): PipeValidations
+    {
+        $this->{$this->pipe_property_name} = (string) ($this->pipe_property_value);
+        return $this;
+    }
+    public function tocapitalized(): PipeValidations
+    {
+        $this->{$this->pipe_property_name} = ucwords($this->pipe_property_value);
+        return $this;
+    }
+    public function tocamel(): PipeValidations
+    {
+        $this->{$this->pipe_property_name} = $this->camel($this->pipe_property_value);
+        return $this;
+    }
+    public function tostudly(): PipeValidations
+    {
+        $this->{$this->pipe_property_name} = $this->studly($this->pipe_property_value);
+        return $this;
+    }
+    public function match($regex): PipeValidations
+    {
+        if (!preg_match($regex, $this->pipe_property_value))
+            return $this->setError($this->pipe_property_name, $message ?? "Option Error.. Check Value..");
+        return $this;
+    }
+    public function replace($regex, $value = ""): PipeValidations
+    {
+        $this->{$this->pipe_property_name} = preg_replace('/^'.$regex.'$/i', $this->pipe_property_value, $value);
         return $this;
     }
     public function default($default): PipeValidations
     {
-        if($this->pipe_property_value === null ) $this->pipe_property_value = $default;
+        if ($this->pipe_property_value === null || empty($this->pipe_property_value)) $this->{$this->pipe_property_name} = $default;
         return $this;
     }
-
+    public function studly($string)
+    {
+        return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
+    }
+    public function camel($string)
+    {
+        return lcfirst($this->studly($string));
+    }
+    public function contains($value): PipeValidations
+    {
+        // COMING SOON
+        return $this;
+    }
+    public function includes($value): PipeValidations
+    {
+        // COMING SOON
+        return $this;
+    }
+    public function has($value): PipeValidations
+    {
+        // COMING SOON
+        return $this;
+    }
 
     public function setError(string $pipe, string $error): PipeValidations
     {

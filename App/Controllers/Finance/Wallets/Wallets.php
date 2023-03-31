@@ -23,7 +23,8 @@ class Wallets extends WalletsLogic
     public function create($req)
     {
         $createData = $this->createWalletPipe($req);
-        Res::json(Wallet::dump((array) $createData));
+        Res::json($createData);
+        // Res::json(Wallet::dump((array) $createData));
     }
 
     /**

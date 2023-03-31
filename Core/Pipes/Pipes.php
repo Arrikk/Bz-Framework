@@ -22,12 +22,13 @@ class Pipes extends PipeValidations
 
     public function __set($name, $value)
     {
+        // die("First Call");
         $this->{$name} = $value;
     }
 
     public function __get($name)
     {
-        // return $name;
+        // return $this->{$name} ?? null;
     }
 
     public function __call($name, $arguments)
