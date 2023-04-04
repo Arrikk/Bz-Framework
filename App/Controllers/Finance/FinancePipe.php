@@ -49,8 +49,16 @@ class FinancePipe extends Authenticated
     public function creditPipe(Pipes $pipe)
     {
         return $pipe->pipe([
-            'wallet_id' => $pipe->wallet_id()->isrequired()->tolower()->wallet_id,
-            'amount' => $pipe->amount()->isrequired()->tofloat()->amount
+            'wallet_id' => $pipe
+                ->wallet_id()
+                ->isrequired()
+                ->tolower()
+                ->wallet_id,
+            'amount' => $pipe
+                ->amount()
+                ->isrequired()
+                ->tofloat()
+                ->amount
         ]);
     }
 }

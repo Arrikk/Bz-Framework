@@ -59,7 +59,9 @@ class Filters extends Override
         if (is_array($object)) :
             foreach ($object as $key => $data) :
                 foreach ($args as $toAppend => $value) :
-                    $object[$key]->$toAppend = $value;
+                    $oldVal = $object[$key]->$toAppend;
+                    if(is_callable($value)) $object[$key]->$toAppend = call_user_func_array($value, [$oldVal]);
+                    else $object[$key]->$toAppend = $value;
                 endforeach;
             endforeach;
         else :
