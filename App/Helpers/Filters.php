@@ -50,7 +50,7 @@ class Filters extends Override
         return $this;
     }
 
-    public function append()
+       public function append()
     {
         $args = func_get_arg(0);
         $object = $this->objectFilter;
@@ -59,8 +59,26 @@ class Filters extends Override
         if (is_array($object)) :
             foreach ($object as $key => $data) :
                 foreach ($args as $toAppend => $value) :
-                    $oldVal = $object[$key]->$toAppend;
-                    if(is_callable($value)) $object[$key]->$toAppend = call_user_func_array($value, [$oldVal]);
+                    /**
+                     * Seperate the incoming value with .
+                     * if the value is slitted to an array by dot and the length of 
+                     * the result is greater than the 1... this means the key intends to create 
+                     * another key from dot suffixed. e.g see.watch (create watch from see) using a value from see,`
+                     */
+                    $exp = explode('.', $toAppend);
+                    if (count($exp) > 1) {
+                        # get the old value wch is from the prefixed.. e.g (see.watch) returns the value of watch
+                        # because see already existed but wants to give its value to watch for use
+                        $prefixedValue = $object[$key]->{$exp[0]} ?? null;
+                        # get the suffixed key e.g (see.watch) gets the key watch
+                        $toAppend = $exp[1];
+                        # check if this key is callable and send the previous value of prefix
+                        if (is_callable($value)) $object[$key]->$toAppend = call_user_func_array($value, [$prefixedValue]);
+                        else $object[$key]->$toAppend = $value;
+                        continue;
+                    }
+                    $oldVal = $object[$key]->$toAppend ?? null;
+                    if (is_callable($value)) $object[$key]->$toAppend = call_user_func_array($value, [$oldVal]);
                     else $object[$key]->$toAppend = $value;
                 endforeach;
             endforeach;
@@ -73,6 +91,7 @@ class Filters extends Override
         $this->objectFilter = $object;
         return $this;
     }
+
 
     public function only()
     {
