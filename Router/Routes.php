@@ -5,8 +5,8 @@ use Core\Router\Router as Route;
 Route::get('', 'home@index');
 
 // Auth Route
-Route::post('api/register', 'users@register@auth');
-Route::post('api/login', 'users@login@auth');
+Route::post('register', 'users@register@auth');
+Route::post('login', 'users@login@auth');
 
 // Password
 Route::post('api/password/change', 'password@change@auth');
