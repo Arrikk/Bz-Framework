@@ -194,7 +194,7 @@ abstract class Controller
         $output = '';
 
         $enc_type = 'AES-256-CBC';
-        $secret = \App\Config::SECRET_KEY;
+        $secret = SECRET_KEY;
         $secret_iv = \substr($secret, 0, 14);
 
         $key = \hash('sha256', $secret);

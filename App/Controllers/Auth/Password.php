@@ -63,7 +63,7 @@ class Password extends Authenticated
     public function reset(Pipes $req)
     {
         $data = $req->pipe([
-            'token' => $req->token()->isrequired()->token,
+            'token' => $req->token()->isrequired()->match('/^[\da-f]+$/i')->token,
             'password' => $req->password()->min(8)->is_strong_password()->password
         ]);
 

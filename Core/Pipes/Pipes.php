@@ -38,7 +38,7 @@ class Pipes extends PipeValidations
         return $this;
     }
 
-    public function pipe($pipes = [])
+    public function pipe(array $pipes = [])
     {
         if (isset($this->pipe_validation_error) && !empty($this->pipe_validation_error)) Res::status(400)::error($this->pipe_validation_error);
         return (object) $pipes;

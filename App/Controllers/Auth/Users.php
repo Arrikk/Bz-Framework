@@ -35,10 +35,7 @@ class Users extends AuthPipe
      */
     public function login(Pipes $body)
     {
-        $piped = $body->pipe([
-            'email' => $body->email()->isemail()->email,
-            'password' => $body->password()->is_strong_password()->password
-        ]);
+        $piped = $this->loginPipe($body);
 
         $auth = Auth::login($piped->email, $piped->password);
 

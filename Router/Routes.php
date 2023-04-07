@@ -9,14 +9,14 @@ Route::post('register', 'users@register@auth');
 Route::post('login', 'users@login@auth');
 
 // Password
-Route::post('api/password/change', 'password@change@auth');
-Route::post('api/password/forgot', 'password@forgot@auth');
-Route::post('api/password/reset', 'password@reset@auth');
-Route::get('api/password/token/{token:[\da-f]+}', 'password@token@auth');
+Route::put('password/change', 'password@change@auth');
+Route::post('password/forgot', 'password@forgot@auth');
+Route::post('password/reset', 'password@reset@auth');
+Route::get('password/token/{token:[\da-f]+}', 'password@token@auth');
 
 // Profile
-Route::get('api/account', 'account@profile');
-Route::post('api/account', 'account@update');
+Route::get('profile', 'account@profile');
+Route::put('profile', 'account@update');
 
 // MY
 

@@ -65,7 +65,8 @@ class Request
         $json = file_get_contents('php://input');
         $data = json_decode($json);
         if ($_SERVER['REQUEST_METHOD'] !== 'PUT')
-            throw new \Exception("PUT not Found");
+        Res::status(404)->json(['error' => "PUT Not Found"]);
+        if(empty($data) && empty($_FILES)) Res::status(403)->json(['error' => "Invalid Request"]);
         $request = new Pipes($data);
         return $request;
     }
