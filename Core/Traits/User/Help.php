@@ -88,6 +88,8 @@ trait Help
         $token_hash = $token->getHashed();
         $this->token = $token->getValue();
 
+        // echo $this->token;
+
         $expiry = time() + 60 * 60 * 2;
         return self::findAndUpdate(
             ['id' => $this->id],

@@ -44,7 +44,7 @@ class Token
      */
     public function getHashed()
     {
-        return hash_hmac('sha256', $this->token, \App\Config::SECRET_KEY);
+        return hash_hmac('sha256', $this->token, SECRET_KEY);
     }
 
       /**
