@@ -13,7 +13,10 @@ class Account extends Authenticated
      */
     public function _profile()
     {
-        Res::json($this->user->remove(...userFilters()));
+        Res::json(
+            $this->user
+                ->remove(...userFilters())
+        );
     }
 
     /**
@@ -35,7 +38,10 @@ class Account extends Authenticated
                 ->tolower()
                 ->username,
         ]);
-        $update = $this->user->updateUser((array) $req)->remove(...userFilters());
+        
+        $update = $this->user
+            ->updateUser((array) $req)
+            ->remove(...userFilters());
         Res::json($update);
     }
 }

@@ -22,11 +22,15 @@ class Users extends AuthPipe
         $data = $this->registerPipe($body); // Pipe Data (DTO) ...
 
         $save = (object) User::save($data);
-        $apiToken = Token::mkToken('enc', json_encode([
+        $apiToken = Token::encodeJSON([
             'id' => "",
             'expires' => strtotime('+2DAYS')
-        ]));
-        Res::json($save->remove(...userFilters())->append(['token' => $apiToken]));
+        ]);
+        Res::json(
+            $save
+                ->remove(...userFilters())
+                ->append(['token' => $apiToken])
+        );
     }
 
     /**

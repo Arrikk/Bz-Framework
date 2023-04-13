@@ -28,9 +28,15 @@ class AuthPipe extends Controller
 
     public function loginPipe(Pipes $pipe)
     {
-      return $pipe->pipe([
-        'email' => $pipe->email()->isemail()->email,
-        'password' => $pipe->password()->isrequired()->password
-      ]);
+        return $pipe->pipe([
+            'email' => $pipe
+                ->email()
+                ->isemail()
+                ->email,
+            'password' => $pipe
+                ->password()
+                ->isrequired()
+                ->password
+        ]);
     }
 }
