@@ -56,7 +56,7 @@ class Request
             Res::status(404)->json(['error' => "Post Not Found"]);
             if(empty($data) && empty($_POST) && empty($_FILES)) Res::status(403)->json(['error' => "Invalid Request"]);
             // Res::status(403)->json(['error' => $_FILES ?? $data]);
-        $request = new Pipes($data ?? $_POST ?? $_FILES);
+        $request = new Pipes($data ?? array_merge($_POST, $_FILES));
         return $request;
     }
 
