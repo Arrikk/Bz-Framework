@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 /**
@@ -13,16 +14,18 @@ class Token
      * @var string
      */
     protected $token;
+    private static $decoded;
 
     /**
      * Class Constructor create a new random token
      * 
      * @return void
      */
-    public function __construct($token =  null){
-        if($token){
+    public function __construct($token =  null)
+    {
+        if ($token) {
             $this->token = $token;
-        }else{
+        } else {
             $this->token = bin2hex(random_bytes(16));
         }
     }
@@ -32,7 +35,7 @@ class Token
      * 
      * @return string The value
      */
-    public function getValue() 
+    public function getValue()
     {
         return $this->token;
     }
@@ -44,10 +47,10 @@ class Token
      */
     public function getHashed()
     {
-        return hash_hmac('sha256', $this->token, \App\Config::SECRET_KEY);
+        return hash_hmac('sha256', $this->token, SECRET_KEY);
     }
 
-      /**
+    /**
      * Encrypt and decrypt data ..(message, string, int, func etc...)
      * @param string $type Encrypt = enc Decrypt = dec
      * @param string $string any
@@ -74,5 +77,30 @@ class Token
         }
 
         return $output;
+    }
+
+    public static function encodeJSON(array $data)
+    {
+        return self::mkToken('enc', json_encode($data, JSON_FORCE_OBJECT));
+    }
+
+    public static function encode($data)
+    {
+        return self::mkToken('enc', ($data));
+    }
+
+    public static function decode(string $encoded)
+    {
+        return self::mkToken('dec', $encoded);
+    }
+
+    public function decodeJSON(string $decoded)
+    {
+        return json_decode(self::mkToken('dec', $decoded));
+    }
+
+    public function string()
+    {
+        return  self::$decoded;
     }
 }

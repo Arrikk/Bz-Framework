@@ -57,6 +57,7 @@ abstract class PipeValidations implements PipeValidationInterface
     public function gte(int $num, string $message = null): PipeValidations
     {
         if ((float) ($this->{$this->pipe_property_name}) > $num)
+
             return $this->setError($this->pipe_property_name, $message ?? "Value must be greater than $num");
         return $this;
     }
@@ -64,6 +65,7 @@ abstract class PipeValidations implements PipeValidationInterface
     public function lte(int $num, string $message = null): PipeValidations
     {
         if ((float) ($this->{$this->pipe_property_name}) < $num)
+
             return $this->setError($this->pipe_property_name, $message ?? "Value must be Lesser than $num");
         return $this;
     }
@@ -87,6 +89,14 @@ abstract class PipeValidations implements PipeValidationInterface
         if (empty($this->{$this->pipe_property_name}))
             return $this->setError($this->pipe_property_name, $message ?? "Value cannot be empty");
         return $this;
+    }
+    
+    public function isjson(string $message = null) : PipeValidations
+    {
+        if (!is_object($this->pipe_property_value))
+            return $this->setError($this->pipe_property_name, $message ?? "Data is mot a valid json object");
+        return $this;
+        
     }
 
     public function isjson(string $message = null): PipeValidations
