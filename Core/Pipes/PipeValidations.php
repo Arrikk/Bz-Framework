@@ -98,13 +98,6 @@ abstract class PipeValidations implements PipeValidationInterface
         
     }
 
-    public function isjson(string $message = null): PipeValidations
-    {
-        if (!is_object($this->{$this->pipe_property_name}))
-            return $this->setError($this->pipe_property_name, $message ?? "Data is mot a valid json object");
-        return $this;
-    }
-
     public function isurl(string $message = null): PipeValidations
     {
         if (!filter_var($this->{$this->pipe_property_name}, FILTER_VALIDATE_URL))
