@@ -72,9 +72,9 @@ class Request
     }
     public static function delete()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE')
             throw new \Exception("\DELETE not Found");
-        $request = new Pipes($_POST);
+        $request = new Pipes($_GET);
         return $request;
     }
 }

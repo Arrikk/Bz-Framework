@@ -10,7 +10,7 @@ class Route
     public static function ENV()
     {
         // echo dirname(__DIR__)."Hone";
-        $dotenv = Dotenv::createImmutable('Public/');
+        $dotenv = Dotenv::createImmutable('./');
         $dotenv->load();
     }
 

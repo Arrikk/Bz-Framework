@@ -112,7 +112,7 @@ trait Model
      * @param bool $exec set to defaultly to true. set to false only to see your query
      * @return object
      */
-    protected static function findById(int $id, string $field = 'id', string $extract = '*', bool $exec = true)
+    public static function findById(int $id, string $field = 'id', string $extract = '*', bool $exec = true)
     {
         if (isset(self::$col) && self::$col) $field = self::$col;
         return static::findOne([$field => $id], $extract, $exec);
@@ -125,7 +125,7 @@ trait Model
      * @param bool $exec set to defaultly to true. set to false only to see your query
      * @return object
      */
-    protected static function findByEmail(string $email, $extract = '*', bool $exec = true)
+    public static function findByEmail(string $email, $extract = '*', bool $exec = true)
     {
         return static::findOne(['email' => $email], $extract, $exec);
     }
@@ -137,7 +137,7 @@ trait Model
      * @param bool $exec set to defaultly to true. set to false only to see your query
      * @return mixed
      */
-    protected static function findAndUpdate(array $array, array $update, bool $exec = true)
+    public static function findAndUpdate(array $array, array $update, bool $exec = true)
     {
         $prep = static::update(self::table(), $update);
         $prep = static::runMultiple($array, $prep);
@@ -154,7 +154,7 @@ trait Model
      * @param bool $exec set to defaultly to true. set to false only to see your query
      * @return mixed
      */
-    protected static function findAndDelete(array $array, bool $exec = true)
+    public static function findAndDelete(array $array, bool $exec = true)
     {
         $prep = static::trash(self::table());
         $prep = static::runMultiple($array, $prep);
@@ -169,7 +169,7 @@ trait Model
      * More Query Method FIND_IN_SET
      * @return string
      */
-    protected static function inset($value,  $field)
+    public static function inset($value,  $field)
     {
         return "FIND_IN_SET('$value', $field)";
     }
@@ -241,7 +241,7 @@ trait Model
     //     return static::findById($save);
     // }
 
-    protected static function in(string $in,  $qry)
+    public static function in(string $in,  $qry)
     {
         if (!$qry || $qry === null || $qry == null) return;
         return "$in IN ($qry)";
@@ -250,6 +250,11 @@ trait Model
     {
         if (!$qry || $qry === null || $qry == null) return;
         return "$in NOT IN ($qry)";
+    }
+
+    public static function like($col, $val)
+    {
+        return "$col LIKE '%$val%'";
     }
 
 

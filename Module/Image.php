@@ -16,6 +16,7 @@ class Image
     public function __construct($files = [])
     {
         $this->files = $files;
+        $this->makeDir();       
         return $this;
     }
 
@@ -45,10 +46,10 @@ class Image
         return $ext;
     }
 
-    public function upload($name = 'image', $path = '')
+    public function upload($path = '')
     {
-        if (isset($this->files[$name]) && !empty($this->files[$name])) :
-            $file = $this->files[$name];
+        if (isset($this->files) && !empty($this->files)) :
+            $file = $this->files;
             $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
             $key = GenerateKey();
 
@@ -78,17 +79,16 @@ class Image
         Res::status(400)::error([
             'message' => "Please provide a name",
             'data' => [
-                'name' => $name,
                 'file' => $this->files
             ]
         ]);
         return ['Nothing Here'];
     }
 
-    public function withAws(User $user): object
+    public function withAws(User $user)
     {
-        $this->awsSettings = $user;
-        return $this;
+        // $this->awsSettings = $user;
+        // return $this;
     }
 
     public function b64($data = '', $path = '')

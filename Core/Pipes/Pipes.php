@@ -34,7 +34,7 @@ class Pipes extends PipeValidations
     public function __call($name, $arguments)
     {
         $this->pipe_property_name = Secure($name);
-        $this->pipe_property_value = Secure(isset($this->{$name}) ? $this->{$name} : null);
+        $this->pipe_property_value = Secure(isset($this->{$name}) ? $this->{$name} : null, true);
         return $this;
     }
 
