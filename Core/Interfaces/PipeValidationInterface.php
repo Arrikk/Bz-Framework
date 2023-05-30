@@ -12,6 +12,8 @@ interface PipeValidationInterface
     public function isstring(int $message = null): PipeValidations;
     public function max(int $max = 10, string $message = null): PipeValidations;
     public function min(int $min = 4, string $message = null): PipeValidations;
+    public function gte(int $num, string $message = null): PipeValidations;
+    public function lte(int $num, string $message = null): PipeValidations;
     public function isemail(string $message = null): PipeValidations;
     public function is_strong_password(string $message = null): PipeValidations;
     public function isurl(string $message = null): PipeValidations;
