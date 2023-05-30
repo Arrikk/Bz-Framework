@@ -3,10 +3,9 @@
 namespace Core\Pipes;
 
 use AllowDynamicProperties;
-use Core\Http\Req;
 use Core\Http\Res;
-use Random\Engine\Secure;
 
+#[AllowDynamicProperties]
 class Pipes extends PipeValidations
 {
     
