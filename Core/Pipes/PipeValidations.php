@@ -56,22 +56,15 @@ abstract class PipeValidations implements PipeValidationInterface
 
     public function gte(int $num, string $message = null): PipeValidations
     {
-<<<<<<< HEAD
         if ((float) ($this->{$this->pipe_property_name}) > $num)
-=======
-        if ((float) ($this->pipe_property_value) > $num)
->>>>>>> f8c2e1ef5b8ef8944286753cc803c33055b64e0b
             return $this->setError($this->pipe_property_name, $message ?? "Value must be greater than $num");
         return $this;
     }
 
     public function lte(int $num, string $message = null): PipeValidations
     {
-<<<<<<< HEAD
         if ((float) ($this->{$this->pipe_property_name}) < $num)
-=======
-        if ((float) ($this->pipe_property_value) < $num)
->>>>>>> f8c2e1ef5b8ef8944286753cc803c33055b64e0b
+
             return $this->setError($this->pipe_property_name, $message ?? "Value must be Lesser than $num");
         return $this;
     }
