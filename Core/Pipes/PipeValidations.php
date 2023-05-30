@@ -57,7 +57,6 @@ abstract class PipeValidations implements PipeValidationInterface
     public function gte(int $num, string $message = null): PipeValidations
     {
         if ((float) ($this->{$this->pipe_property_name}) > $num)
-
             return $this->setError($this->pipe_property_name, $message ?? "Value must be greater than $num");
         return $this;
     }
