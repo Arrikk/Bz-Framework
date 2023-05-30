@@ -17,9 +17,20 @@ class Password extends Authenticated
     public function _change(Pipes $req)
     {
         $body = $req->pipe([
-            'old_password' => $req->old_password()->isrequired()->old_password,
-            'new_password' => $req->new_password()->isrequired()->is_strong_password()->new_password,
-            'confirm_password' => $req->confirm_password()->isequal($req->new_password)->is_strong_password()->confirm_password,
+            'old_password' => $req
+                ->old_password()
+                ->isrequired()
+                ->old_password,
+            'new_password' => $req
+                ->new_password()
+                ->isrequired()
+                ->is_strong_password()
+                ->new_password,
+            'confirm_password' => $req
+                ->confirm_password()
+                ->isequal($req->new_password)
+                ->is_strong_password()
+                ->confirm_password,
         ]);
 
         $user = $this->user;
@@ -48,7 +59,8 @@ class Password extends Authenticated
     {
         if (isset($this->route_params['token'])) :
             $token = $this->route_params['token'];
-            if(User::findByPasswordReset($token)) Res::json(["message" => "Token Verified"]);
+            if (User::findByPasswordReset($token))
+                Res::json(["message" => "Token Verified"]);
             Res::status(400)->error("Invalid Token");
         else :
             Res::status(404)->error('Please Provide a token');
@@ -63,8 +75,16 @@ class Password extends Authenticated
     public function reset(Pipes $req)
     {
         $data = $req->pipe([
-            'token' => $req->token()->isrequired()->token,
-            'password' => $req->password()->min(8)->is_strong_password()->password
+            'token' => $req
+                ->token()
+                ->isrequired()
+                ->match('/^[\da-f]+$/i')
+                ->token,
+            'password' => $req
+                ->password()
+                ->min(8)
+                ->is_strong_password()
+                ->password
         ]);
 
         $user = User::findByPasswordReset($data->token);

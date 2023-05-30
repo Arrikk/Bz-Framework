@@ -2,6 +2,7 @@
 namespace App\Controllers\Authenticated;
 
 use App\Models\User;
+use App\Token;
 use Core\Controller;
 use Core\Http\Res;
 
@@ -16,7 +17,7 @@ class Authenticated extends Controller
 
             $token = explode(' ', $header['Authorization']);
             $token = $token[1];
-            if ($token = $this->mkToken('dec', $token)) :
+            if ($token = Token::decode($token)) :
                 $user = json_decode($token);
                 if (time() > $user->expires) :
                     Res::status(400)->error(['token' => "Token Expired"]);

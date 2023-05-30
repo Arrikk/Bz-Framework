@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Controllers\Authenticated\Authenticated;
@@ -12,7 +13,10 @@ class Account extends Authenticated
      */
     public function _profile()
     {
-        Res::json($this->user->remove(...userFilters()));
+        Res::json(
+            $this->user
+                ->remove(...userFilters())
+        );
     }
 
     /**
@@ -21,12 +25,23 @@ class Account extends Authenticated
      */
     public function _update(Pipes $req)
     {
-        $update = $this->user->updateUser([
-            // Add Update Data... Or Pass DTO Pipes
-            // 'phone' => Secure($req->phone ?? $this->user->phone),
-            // 'first_name' => Secure($req->firstname ?? $this->user->first_name),
-            'updated_at' => CURRENT_DATE,
-        ])->remove(...userFilters());
+        $req = $req->pipe([
+            'fullname' => $req
+                ->fullname()
+                ->default($this->user->fullname)
+                ->match('/^[a-z ]+$/i')
+                ->fullname,
+            'username' => $req
+                ->username()
+                ->default($this->user->username)
+                ->match('/^[a-z ]+$/i')
+                ->tolower()
+                ->username,
+        ]);
+        
+        $update = $this->user
+            ->updateUser((array) $req)
+            ->remove(...userFilters());
         Res::json($update);
     }
 }

@@ -22,11 +22,15 @@ class Users extends AuthPipe
         $data = $this->registerPipe($body); // Pipe Data (DTO) ...
 
         $save = (object) User::save($data);
-        $apiToken = Token::mkToken('enc', json_encode([
+        $apiToken = Token::encodeJSON([
             'id' => "",
             'expires' => strtotime('+2DAYS')
-        ]));
-        Res::json($save->remove(...userFilters())->append(['token' => $apiToken]));
+        ]);
+        Res::json(
+            $save
+                ->remove(...userFilters())
+                ->append(['token' => $apiToken])
+        );
     }
 
     /**
@@ -35,10 +39,7 @@ class Users extends AuthPipe
      */
     public function login(Pipes $body)
     {
-        $piped = $body->pipe([
-            'email' => $body->email()->isemail()->email,
-            'password' => $body->password()->is_strong_password()->password
-        ]);
+        $piped = $this->loginPipe($body);
 
         $auth = Auth::login($piped->email, $piped->password);
 
