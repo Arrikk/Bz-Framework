@@ -2,7 +2,6 @@
 namespace App\Controllers;
 
 use Core\Controller;
-use Core\Http\Req;
 use Core\Http\Res;
 
 class Home extends Controller
