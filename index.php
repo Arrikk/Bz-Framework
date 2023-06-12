@@ -17,11 +17,11 @@ require 'vendor/autoload.php';
  * Add route to the Routing Table
  */
 
-
+use Core\Env;
 use Core\Router\Route;
 
 // Load ENV
- Route::ENV();
+ Env::load();
  
  /**
   * Twig

@@ -89,15 +89,14 @@ abstract class PipeValidations implements PipeValidationInterface
             return $this->setError($this->pipe_property_name, $message ?? "Value cannot be empty");
         return $this;
     }
-    
-    public function isjson(string $message = null) : PipeValidations
+  
+    public function isjson(string $message = null): PipeValidations
     {
         if (!is_object($this->pipe_property_value))
             return $this->setError($this->pipe_property_name, $message ?? "Data is mot a valid json object");
         return $this;
-        
     }
-
+  
     public function isurl(string $message = null): PipeValidations
     {
         if (!filter_var($this->{$this->pipe_property_name}, FILTER_VALIDATE_URL))
@@ -113,9 +112,8 @@ abstract class PipeValidations implements PipeValidationInterface
     }
     public function isbool($message = null): PipeValidations
     {
-        return 
-        ($this->{$this->pipe_property_name} === "1" || $this->{$this->pipe_property_name} !== "0" || $this->{$this->pipe_property_name} !== '' 
-         ? $this : $this->setError($this->pipe_property_name, $message ?? "Value must be a boolean"));
+        return ($this->{$this->pipe_property_name} === "1" || $this->{$this->pipe_property_name} !== "0" || $this->{$this->pipe_property_name} !== ''
+            ? $this : $this->setError($this->pipe_property_name, $message ?? "Value must be a boolean"));
         // if ($this->{$this->pipe_property_name} !== "1"  || $this->{$this->pipe_property_name} !== "0" || ($this->{$this->pipe_property_name} !== ''))
         //     return $this->setError($this->pipe_property_name, $message ?? "Value must be a boolean");
         // return $this;
@@ -124,7 +122,7 @@ abstract class PipeValidations implements PipeValidationInterface
     public function isenum(): PipeValidations
     {
         if (!in_array($this->{$this->pipe_property_name}, func_get_args()))
-            return $this->setError($this->pipe_property_name, $message ?? "Choose between these options (".implode(', ', func_get_args()).")" );
+            return $this->setError($this->pipe_property_name, $message ?? "Choose between these options (" . implode(', ', func_get_args()) . ")");
         return $this;
     }
     public function tolower(): PipeValidations
@@ -169,8 +167,9 @@ abstract class PipeValidations implements PipeValidationInterface
     }
     public function match($regex): PipeValidations
     {
-        if (!preg_match($regex, $this->{$this->pipe_property_name}))
-            return $this->setError($this->pipe_property_name, $message ?? "Option Error.. Check Value..");
+        if ($this->{$this->pipe_property_name})
+            if (!preg_match($regex, $this->{$this->pipe_property_name}))
+                return $this->setError($this->pipe_property_name, $message ?? "Option Error.. Check Value..");
         return $this;
     }
     public function replace($regex, $value = ""): PipeValidations
@@ -224,6 +223,18 @@ abstract class PipeValidations implements PipeValidationInterface
 
     public function nullable()
     {
+        return $this;
+    }
+    public function true($val, string $message = null)
+    {
+        if ($val)
+            return $this->setError($this->pipe_property_name, $message ?? "Value must be an integer");
+        return $this;
+    }
+    public function false($val, string $message = null)
+    {
+        if (!$val)
+            return $this->setError($this->pipe_property_name, $message ?? "Value must be an integer");
         return $this;
     }
 

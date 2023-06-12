@@ -25,7 +25,8 @@ abstract class Guzzle extends BaseReq
         $this->params = ($params);
         // $this->params = GuzzleHttp\Psr7\Utils::streamFor(json_encode($params));
         // $this->params = GuzzleHttp\RequestOptions::JSON(($params));
-        $this->setConfig($header);
+        if(!empty($header))
+            $this->setConfig($header);
     }
 
     public function post($url = '', $useDefault = false)
@@ -53,6 +54,12 @@ abstract class Guzzle extends BaseReq
             $message = json_decode($th->getResponse()->getBody()->getContents());
             Res::status($th->getCode())->json($message);
         }
+    }
+
+    public function headers(array $headers)
+    {
+        $this->setConfig($headers);
+        return $this;
     }
 
     protected function setConfig(array $header = [])
