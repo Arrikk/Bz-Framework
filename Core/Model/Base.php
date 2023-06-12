@@ -5,6 +5,7 @@ namespace Core\Model;
 use AllowDynamicProperties;
 use PDO;
 use App\Config;
+use Core\Env;
 use PDOException;
 
 /**
@@ -65,8 +66,8 @@ abstract class Base
 
         // if($db === null){
         try {
-            Config::clearDB();
-            $db = new PDO('mysql:host=' . Config::$DB_HOST . ';dbname=' . Config::$DB_NAME . ';charset=utf8mb4', Config::$DB_USER, Config::$DB_PASSWORD);
+            // Config::clearDB();
+            $db = new PDO('mysql:host=' . Env::DB_HOST() . ';dbname=' . Env::DB_NAME() . ';charset=utf8mb4;port='.Env::DB_PORT(), Env::DB_USER(), ENV::DB_PASSWORD());
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             return $db;
@@ -237,6 +238,10 @@ abstract class Base
     private function _right($right)
     {
         $this->query .= " RIGHT JOIN $right";
+        return $this;
+    }
+    private function _join(string $join){
+        $this->query .= " JOIN $join";
         return $this;
     }
     private function _outer($out)

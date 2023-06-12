@@ -1,7 +1,9 @@
 <?php
 
 namespace Core\Http;
+
 use Core\Interfaces\Resinterface;
+
 /**
  * Base Response
  */
@@ -11,7 +13,7 @@ final class Res implements Resinterface
     public static function status(int $status = 200)
     {
         http_response_code($status);
-        return new Res; 
+        return new Res;
     }
 
     public static function json($message = null)
@@ -29,7 +31,12 @@ final class Res implements Resinterface
 
     public static function send($message = null)
     {
-        echo $message;
+        header('content-type: application/json');
+        if (is_array($message) || json_encode($message) !== '{}') :
+            echo json_encode($message);
+        else :
+            echo ($message);
+        endif;
         return exit;
     }
 
@@ -38,7 +45,7 @@ final class Res implements Resinterface
         return $message;
         exit;
     }
-        
+
     public static function ip()
     {
         return getenv('HTTP_CLIENT_IP') ?:

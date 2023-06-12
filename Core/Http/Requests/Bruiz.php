@@ -14,6 +14,7 @@ abstract class Bruiz extends BaseReq
 
     public $req;
     public $withBool = false;
+    public $raw = false;
 
     public function __construct($params = [], $header = [])
     {
@@ -65,6 +66,11 @@ abstract class Bruiz extends BaseReq
     public function withBool()
     {
         $this->withBool = true;
+        return $this;
+    }
+    public function raw()
+    {
+        $this->raw = true;
         return $this;
     }
 

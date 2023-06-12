@@ -11,7 +11,6 @@ use Core\Traits\Filter;
  * ============== Code Hart (Bruiz) =============
  * ==============================================
  */
-
 trait Model
 {
 
@@ -241,10 +240,10 @@ trait Model
     //     return static::findById($save);
     // }
 
-    public static function in(string $in,  $qry)
+    public static function in(string $column,  $value)
     {
-        if (!$qry || $qry === null || $qry == null) return;
-        return "$in IN ($qry)";
+        if (!$value || $value === null || $value == null) return;
+        return "$column IN ($value)";
     }
     protected static function notIn(string $in, $qry)
     {
@@ -255,6 +254,11 @@ trait Model
     public static function like($col, $val)
     {
         return "$col LIKE '%$val%'";
+    }
+
+    public static function decoded()
+    {
+        return self::get();
     }
 
 

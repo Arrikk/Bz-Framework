@@ -2,7 +2,7 @@
 
 namespace Core\Router;
 
-use Dotenv\Dotenv;
+use Core\Request;
 
 class Route
 {
@@ -10,13 +10,13 @@ class Route
     public static function ENV()
     {
         // echo dirname(__DIR__)."Hone";
-        $dotenv = Dotenv::createImmutable('./');
-        $dotenv->load();
+        // $dotenv = Dotenv::createImmutable('./');
+        // $dotenv->load();
     }
 
     public static function Route()
     {
-
+        Request::cors();
         $router = new Router;
         require 'Router/Routes.php';
         require 'Utils/utils.php';

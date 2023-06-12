@@ -1,11 +1,13 @@
 <?php
+
 namespace Core;
+
 /**
  * View Base Controller
  * 
  * PHP version 7.4.8
  */
-class View 
+class View
 {
     /**
      * Render a view file
@@ -14,52 +16,59 @@ class View
      * 
      * @return void 
      */
-    public static function draw($view = null, $args = [], $autoload = false){
-        if($autoload){
+    public static function draw($view = null, $args = [], $autoload = false)
+    {
+        if ($autoload) {
             self::autoload();
         }
         extract($args, EXTR_SKIP);
         $__page = '';
         $views = "{ $view }";
-        if(preg_match('/\{(?P<name>[^\}]+)\}/i', "$views", $matches)){
+        if (preg_match('/\{(?P<name>[^\}]+)\}/i', "$views", $matches)) {
             $view = 'index.php';
             $__page = str_replace(' ', '', $matches['name']);
         }
-        $file = 'App/Views/'.$view;
+        $file = 'App/Views/' . $view;
 
-        if(is_readable($file)){
+        if (is_readable($file)) {
             require $file;
-        }else{
+        } else {
             echo "$file Not Found";
         }
     }
-    public static function page($view = null, $args = [], $autoload = false){
-        if($autoload){
+    public static function page($view = null, $args = [], $autoload = false)
+    {
+        if ($autoload) {
             self::autoload();
         }
         extract($args, EXTR_SKIP);
-        
-        $file = 'App/Views/'.$view;
 
-        if(is_readable($file)){
-            require $file;
-        }else{
+        $file = 'App/Views/' . $view;
+
+        if (!is_readable($file))
             echo "$file Not Found";
-        }
+
+
+        ob_start();
+        include $file;
+        // return "";
+        // ob_get_clean(); 
+        exit();
     }
-    public static function component($view = null, $args = []){
+    public static function component($view = null, $args = [])
+    {
 
         extract($args, EXTR_SKIP);
         $__page = '';
         $views = "{ $view }";
-        if(preg_match('/\{(?P<name>[^\}]+)\}/i', "$views", $matches)){
+        if (preg_match('/\{(?P<name>[^\}]+)\}/i', "$views", $matches)) {
             $__page = str_replace(' ', '', $matches['name']);
         }
         $file = "App/Views/components/$__page.php";
 
-        if(is_readable($file)){
+        if (is_readable($file)) {
             require $file;
-        }else{
+        } else {
             echo "$file Not Found";
         }
     }
@@ -72,26 +81,27 @@ class View
      * Loads on two levels 
      * @return void
      */
-    public static function autoload($path = 'components'){
+    public static function autoload($path = 'components')
+    {
         $path = "App/Views/$path/";
 
-        if(!file_exists($path)) mkdir($path);
+        if (!file_exists($path)) mkdir($path);
         $dir = scandir($path);
         // \extract($GLOBALS['settings']);     
-        foreach($dir as $dir){
-            if($dir == '..' || $dir == '...' || $dir == '.'){
+        foreach ($dir as $dir) {
+            if ($dir == '..' || $dir == '...' || $dir == '.') {
                 continue;
-            }else{
-                if(is_dir($path.$dir) === false){
-                    require $path.$dir;
-                }elseif (is_dir($path.$dir)) {
-                    $inDir = \scandir($path.$dir);
+            } else {
+                if (is_dir($path . $dir) === false) {
+                    require $path . $dir;
+                } elseif (is_dir($path . $dir)) {
+                    $inDir = \scandir($path . $dir);
                     foreach ($inDir as $in_dir) {
-                        if($in_dir == '..' || $in_dir == '...' || $in_dir == '.'){
+                        if ($in_dir == '..' || $in_dir == '...' || $in_dir == '.') {
                             continue;
-                        }else{
-                            if(is_dir($path.$dir.'/'.$in_dir) === false){
-                                require $path.$dir.'/'.$in_dir;
+                        } else {
+                            if (is_dir($path . $dir . '/' . $in_dir) === false) {
+                                require $path . $dir . '/' . $in_dir;
                             }
                         }
                     }
@@ -106,7 +116,7 @@ class View
     public static function render($view, $args = [])
     {
         static $twig = null;
-        if($twig === null){
+        if ($twig === null) {
             $loader = new \Twig_Loader_Filesystem('App/Views');
             $twig = new \Twig_Environment($loader);
             $twig->addGlobal('user', \App\Auth::getUser());
@@ -120,7 +130,6 @@ class View
             $twig->addGlobal('pass_placeholder', translate('Enter your passcode'));
             $twig->addGlobal('fgCode', translate('Forgot Code'));
             $twig->addGlobal('signbtn', translate('Sign in'));
-            
         }
         echo $twig->render($view, $args);
     }
@@ -131,7 +140,7 @@ class View
     public static function template($view, $args = [])
     {
         static $twig = null;
-        if($twig === null){
+        if ($twig === null) {
             $loader = new \Twig_Loader_Filesystem('App/Views');
             $twig = new \Twig_Environment($loader);
         }
