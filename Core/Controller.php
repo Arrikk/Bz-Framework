@@ -20,13 +20,17 @@ abstract class Controller
      */
     protected $route_params = [];
 
+    protected $guard_params;
+
     /**
      * Contruct method Store route params
      */
-    public function __construct($route_params = [])
+    public function __construct($route_params = [], $guards = '')
     {
         $this->route_params = $route_params;
+        $this->guard_params = $guards;
     }
+
 
     /**
      * Create an action Filter
@@ -121,6 +125,10 @@ abstract class Controller
         }
         if (!empty($error)) Res::status(400)->json(['error' => $error]);
         return true;
+    }
+
+    public function guard($guard) {
+        $this->guardModel = $guard;
     }
 
     public static function requires(array $params = [])

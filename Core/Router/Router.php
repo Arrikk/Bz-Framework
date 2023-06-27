@@ -2,6 +2,7 @@
 
 namespace Core\Router;
 
+use App\Models\User;
 use Core\Calls\Override;
 use Core\Http\Res;
 use Core\Interfaces\Router as InterfacesRouter;
@@ -36,6 +37,8 @@ class Router extends Override implements InterfacesRouter
      * Get type of route
      */
     protected $method = 'GET';
+
+    protected static $guarded = '';
 
     // private static $
 
@@ -100,6 +103,11 @@ class Router extends Override implements InterfacesRouter
     {
         array_map(function () use ($route) {
         }, $groups);
+    }
+
+    public function guard($guard)
+    {
+        self::$guarded = $guard;
     }
 
     /**
@@ -185,7 +193,8 @@ class Router extends Override implements InterfacesRouter
 
             if (class_exists($controller ?? '')) {
 
-                $controller_obj = new $controller($this::$params['binding'] ?? []);
+                $controller_obj = new $controller($this::$params['binding'] ?? [], self::$guarded);
+                // $controller_obj->guard($this->guarded);
 
                 $action = $this->convertToCamelCase($action);
 

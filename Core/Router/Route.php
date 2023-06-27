@@ -21,7 +21,7 @@ class Route
         require 'Router/Routes.php';
         require 'Utils/utils.php';
         require 'App/Variables.php';
-        
+
         /**
          * Match the Requested Url
          */
