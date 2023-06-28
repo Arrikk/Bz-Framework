@@ -73,7 +73,7 @@ class Router extends Override implements InterfacesRouter
 
         // $class = new static;
 
-        self::$routes[$route][$method] = $param;
+        self::$routes[$route][$method]['method'] = $param;
         self::$previouslyCalled = [
             'method' => $method,
             'route' => $route,
@@ -113,7 +113,15 @@ class Router extends Override implements InterfacesRouter
     public function guard($guard = "none")
     {
         // self::$guarded = $guard;
-        self::$routes[self::$previouslyCalled['route']]['access'] = $guard;
+        $previouslyCalledRoute = self::$previouslyCalled['route'];
+        $previouslyCalledMethod = self::$previouslyCalled['method'];
+        // Res::json([
+
+        //     $previouslyCalledRoute, $previouslyCalledMethod
+        //     , self::$previouslyCalled,
+        //     'routes' => self::$routes,
+        // ]);
+        self::$routes[$previouslyCalledRoute][$previouslyCalledMethod]['access'] = $guard;
         // Res::send([
         //     'routes' => self::$routes,
         //     'groups' => self::$guarded
@@ -144,28 +152,27 @@ class Router extends Override implements InterfacesRouter
 
                 foreach ($matches as $key => $value) {
 
+                    if (is_string($params[$method]['method'])) :
+
+                        $ct = $this->controller_action_str($params[$method]['method']);
+
+                        $params[$method]['method'] = ['binding' => [
+                            'controller' => $ct->controller,
+                            'action' => $ct->action,
+                        ]];
+                    else :
+                        $params[$method]['method']['binding']['access'] = $params[$method]['access'];
+
+                    endif;
                     if (is_string($key)) {
-                        if (is_string($params[$method])) :
-
-                            $ct = $this->controller_action_str($params[$method]);
-
-                            $params[$method] = ['binding' => [
-                                'controller' => $ct->controller,
-                                'action' => $ct->action,
-                            ]];
-
-                        endif;
-                        $params[$method]['binding'][$key] = $value;
+                        $params[$method]['method']['binding'][$key] = $value;
                     }
                 }
 
-                $ct = $this->controller_action_str($params[$method]);
+                // Res::send($params[$method]['method']);
+                // $ct = $this->controller_action_str($params[$method]['method']);
 
-                self::$params = $params[$method] = ['binding' => [
-                    'controller' => $ct->controller,
-                    'action' => $ct->action,
-                    'access' => $params['access'] ?? null
-                ]];
+                self::$params = $params[$method]['method'];
                 return true;
             }
         }
