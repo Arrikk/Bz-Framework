@@ -31,6 +31,11 @@ abstract class Controller
         $this->guard_params = $guards;
     }
 
+    public function setGuard($value)
+    {
+        $this->guard_params = $value;
+    }
+
 
     /**
      * Create an action Filter

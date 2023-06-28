@@ -25,6 +25,7 @@ class Router extends Override implements InterfacesRouter
      * @return array
      */
     protected static $routes = [];
+    protected static $previouslyCalled;
 
     /**
      * Get matched Params
@@ -38,7 +39,7 @@ class Router extends Override implements InterfacesRouter
      */
     protected $method = 'GET';
 
-    protected static $guarded = '';
+    protected static $guarded;
 
     // private static $
 
@@ -73,6 +74,10 @@ class Router extends Override implements InterfacesRouter
         // $class = new static;
 
         self::$routes[$route][$method] = $param;
+        self::$previouslyCalled = [
+            'method' => $method,
+            'route' => $route,
+        ];
         // $class->method = "IOIIOI";
         return new static;
     }
@@ -105,9 +110,14 @@ class Router extends Override implements InterfacesRouter
         }, $groups);
     }
 
-    public function guard($guard)
+    public function guard($guard = "none")
     {
-        self::$guarded = $guard;
+        // self::$guarded = $guard;
+        self::$routes[self::$previouslyCalled['route']]['access'] = $guard;
+        // Res::send([
+        //     'routes' => self::$routes,
+        //     'groups' => self::$guarded
+        // ]);
     }
 
     /**
@@ -141,13 +151,21 @@ class Router extends Override implements InterfacesRouter
 
                             $params[$method] = ['binding' => [
                                 'controller' => $ct->controller,
-                                'action' => $ct->action
+                                'action' => $ct->action,
                             ]];
+
                         endif;
                         $params[$method]['binding'][$key] = $value;
                     }
                 }
-                self::$params = $params[$method];
+
+                $ct = $this->controller_action_str($params[$method]);
+
+                self::$params = $params[$method] = ['binding' => [
+                    'controller' => $ct->controller,
+                    'action' => $ct->action,
+                    'access' => $params['access'] ?? null
+                ]];
                 return true;
             }
         }
