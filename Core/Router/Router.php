@@ -2,6 +2,7 @@
 
 namespace Core\Router;
 
+use App\Models\User;
 use Core\Calls\Override;
 use Core\Http\Res;
 use Core\Interfaces\Router as InterfacesRouter;
@@ -24,6 +25,7 @@ class Router extends Override implements InterfacesRouter
      * @return array
      */
     protected static $routes = [];
+    protected static $previouslyCalled;
 
     /**
      * Get matched Params
@@ -36,6 +38,8 @@ class Router extends Override implements InterfacesRouter
      * Get type of route
      */
     protected $method = 'GET';
+
+    protected static $guarded;
 
     // private static $
 
@@ -69,7 +73,11 @@ class Router extends Override implements InterfacesRouter
 
         // $class = new static;
 
-        self::$routes[$route][$method] = $param;
+        self::$routes[$route][$method]['method'] = $param;
+        self::$previouslyCalled = [
+            'method' => $method,
+            'route' => $route,
+        ];
         // $class->method = "IOIIOI";
         return new static;
     }
@@ -102,6 +110,24 @@ class Router extends Override implements InterfacesRouter
         }, $groups);
     }
 
+    public function guard($guard = "none")
+    {
+        // self::$guarded = $guard;
+        $previouslyCalledRoute = self::$previouslyCalled['route'];
+        $previouslyCalledMethod = self::$previouslyCalled['method'];
+        // Res::json([
+
+        //     $previouslyCalledRoute, $previouslyCalledMethod
+        //     , self::$previouslyCalled,
+        //     'routes' => self::$routes,
+        // ]);
+        self::$routes[$previouslyCalledRoute][$previouslyCalledMethod]['access'] = $guard;
+        // Res::send([
+        //     'routes' => self::$routes,
+        //     'groups' => self::$guarded
+        // ]);
+    }
+
     /**
      * Get routes
      * 
@@ -126,20 +152,27 @@ class Router extends Override implements InterfacesRouter
 
                 foreach ($matches as $key => $value) {
 
+                    if (is_string($params[$method]['method'])) :
+
+                        $ct = $this->controller_action_str($params[$method]['method']);
+
+                        $params[$method]['method'] = ['binding' => [
+                            'controller' => $ct->controller,
+                            'action' => $ct->action,
+                        ]];
+                    else :
+                        $params[$method]['method']['binding']['access'] = $params[$method]['access'];
+
+                    endif;
                     if (is_string($key)) {
-                        if (is_string($params[$method])) :
-
-                            $ct = $this->controller_action_str($params[$method]);
-
-                            $params[$method] = ['binding' => [
-                                'controller' => $ct->controller,
-                                'action' => $ct->action
-                            ]];
-                        endif;
-                        $params[$method]['binding'][$key] = $value;
+                        $params[$method]['method']['binding'][$key] = $value;
                     }
                 }
-                self::$params = $params[$method];
+
+                // Res::send($params[$method]['method']);
+                // $ct = $this->controller_action_str($params[$method]['method']);
+
+                self::$params = $params[$method]['method'];
                 return true;
             }
         }
@@ -185,7 +218,8 @@ class Router extends Override implements InterfacesRouter
 
             if (class_exists($controller ?? '')) {
 
-                $controller_obj = new $controller($this::$params['binding'] ?? []);
+                $controller_obj = new $controller($this::$params['binding'] ?? [], self::$guarded);
+                // $controller_obj->guard($this->guarded);
 
                 $action = $this->convertToCamelCase($action);
 

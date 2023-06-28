@@ -6,7 +6,7 @@ use Dotenv\Dotenv;
 
 class Env
 {
-    public static function __callStatic($name, $arguments)
+     static function __callStatic($name, $arguments)
     {
         return self::_getENV($name);
     }
@@ -21,7 +21,7 @@ class Env
         endif;
     }
 
-    public static function _getENV($name)
+    private static function _getENV($name)
     {
         $env = getenv($name);
         if (isset($env) && $env !== false)

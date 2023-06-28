@@ -76,6 +76,11 @@ abstract class PipeValidations implements PipeValidationInterface
         return $this;
     }
 
+    public function passwordhash()
+    {
+        $this->{$this->pipe_property_name} = password_hash($this->{$this->pipe_property_name}, PASSWORD_DEFAULT);
+        return $this;
+    }
     public function is_strong_password(string $message = null): PipeValidations
     {
         return $this;
@@ -89,14 +94,14 @@ abstract class PipeValidations implements PipeValidationInterface
             return $this->setError($this->pipe_property_name, $message ?? "Value cannot be empty");
         return $this;
     }
-  
+
     public function isjson(string $message = null): PipeValidations
     {
         if (!is_object($this->pipe_property_value))
             return $this->setError($this->pipe_property_name, $message ?? "Data is mot a valid json object");
         return $this;
     }
-  
+
     public function isurl(string $message = null): PipeValidations
     {
         if (!filter_var($this->{$this->pipe_property_name}, FILTER_VALIDATE_URL))
@@ -205,6 +210,7 @@ abstract class PipeValidations implements PipeValidationInterface
     {
         return lcfirst($this->studly($string));
     }
+
     public function contains($value): PipeValidations
     {
         // COMING SOON

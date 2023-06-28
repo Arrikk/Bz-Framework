@@ -42,4 +42,5 @@ class Pipes extends PipeValidations
         if (isset($this->pipe_validation_error) && !empty($this->pipe_validation_error)) Res::status(400)::error($this->pipe_validation_error);
         return (object) $pipes;
     }
+
 }
