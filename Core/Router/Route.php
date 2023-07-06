@@ -25,7 +25,15 @@ class Route
         /**
          * Match the Requested Url
          */
-        $url = rtrim(ltrim($_SERVER['QUERY_STRING']));
+        $path = (isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : $_SERVER['REQUEST_URI']);
+
+        $position = strpos($path, '/');
+
+        // Remove the substring if found
+        if ($position !== false) {
+            $path = substr_replace($path, "", $position, strlen('/'));
+        }
+        $url = rtrim(ltrim($path));
         $router->dispatch($url);
     }
 }
