@@ -161,7 +161,7 @@ class Router extends Override implements InterfacesRouter
                             'action' => $ct->action,
                         ]];
                     else :
-                        $params[$method]['method']['binding']['access'] = $params[$method]['access'];
+                        $params[$method]['method']['binding']['access'] = $params[$method]['access'] ?? null;
 
                     endif;
                     if (is_string($key)) {
