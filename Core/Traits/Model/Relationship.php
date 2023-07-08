@@ -40,7 +40,7 @@ trait Relationship
         return $class;
     }
 
-    public function paginate($page = 1, $limit = LIMIT, $order = ASC, $offset = 0)
+    public function paginateed($page = 1, $limit = LIMIT, $order = ASC, $offset = 0)
     {
         $this->paginate = true;
         $this->paginateOptions = [

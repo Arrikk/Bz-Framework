@@ -6,6 +6,7 @@ use AllowDynamicProperties;
 use PDO;
 use App\Config;
 use Core\Env;
+use Core\Http\Res;
 use PDOException;
 
 /**
@@ -69,10 +70,10 @@ abstract class Base
             // Config::clearDB();
             $db = new PDO('mysql:host=' . Env::DB_HOST() . ';dbname=' . Env::DB_NAME() . ';charset=utf8mb4;port='.Env::DB_PORT(), Env::DB_USER(), ENV::DB_PASSWORD());
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+            $db->exec("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
             return $db;
         } catch (PDOException $e) {
-            echo "Connection Attempt Failed " . $e->getMessage();
+            Res::send("Connection Attempt Failed " . $e->getMessage());
         }
         // }
     }
@@ -319,33 +320,39 @@ abstract class Base
     protected function exec()
     {
 
-        $db =  $this->db();
-        $stmt = $db->prepare($this->query);
-        foreach ($this->fields as $key => $value) {
-            $stmt->bindValue(":$key", $value);
-        }
-
-        if ($this->select ?? false) {
-            $stmt->execute();
-            if ($this->class && $this->class !== null) {
-                $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-                return $stmt->fetch();
-            } elseif ($this->both && $this->both !== null) {
-                return $stmt->fetchAll(PDO::FETCH_BOTH);
-            } elseif ($this->assoc && $this->assoc !== null) {
-                return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            } elseif ($this->obj || $this->obj !== null) {
-                return $stmt->fetch(PDO::FETCH_OBJ);
-            } else {
-                // $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-                return $stmt->fetchAll(PDO::FETCH_OBJ);
+        try {
+            //code...
+            $db =  $this->db();
+            $stmt = $db->prepare($this->query);
+            foreach ($this->fields as $key => $value) {
+                $stmt->bindValue(":$key", $value);
             }
-        } else {
-            if ($this->last) {
+    
+            if ($this->select ?? false) {
                 $stmt->execute();
-                return $db->lastInsertId();
+                if ($this->class && $this->class !== null) {
+                    $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+                    return $stmt->fetch();
+                } elseif ($this->both && $this->both !== null) {
+                    return $stmt->fetchAll(PDO::FETCH_BOTH);
+                } elseif ($this->assoc && $this->assoc !== null) {
+                    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } elseif ($this->obj || $this->obj !== null) {
+                    return $stmt->fetch(PDO::FETCH_OBJ);
+                } else {
+                    // $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+                    return $stmt->fetchAll(PDO::FETCH_OBJ);
+                }
+            } else {
+                if ($this->last) {
+                    $stmt->execute();
+                    return $db->lastInsertId();
+                }
+                return $stmt->execute();
             }
-            return $stmt->execute();
+        } catch (\Throwable $th) {
+            //throw $th;
+            Res::status(400)->error(['error' => $th->getMessage()]);
         }
     }
     /**

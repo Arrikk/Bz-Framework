@@ -2,7 +2,7 @@
 
 namespace Core\Traits\Model;
 
-use Core\Http\Res;
+use Core\Helpers\Paginate;
 use Core\Traits\Filter;
 
 /**
@@ -34,6 +34,7 @@ trait Model
 
     private static $col = 'id';
     protected static $isTable = null;
+    protected static $pagination = null;
 
 
     public function __construct($table = null)
@@ -64,12 +65,26 @@ trait Model
      */
     public static function find(array $array = [], string $query = '*', bool $exec = true)
     {
+        $total = 0;
+        if(self::$pagination):
+            $array['$.order'] = self::$pagination->order;
+            $array['$.limit'] = self::$pagination->limit;
+            $total = self::select('count(*) as totalItems', self::table())->obj()->exec();
+        endif;
+
         $prep = static::select($query, self::table());
         if (!empty($array)) {
             $prep = static::runMultiple($array, $prep);
         }
         if ($exec) :
             $prep = $prep->exec();
+            if(self::$pagination) return (object)[
+                'items' => $prep,
+                'page' => self::$pagination->page,
+                'limit' => self::$pagination->pageLimit,
+                'offset' => self::$pagination->offset,
+                'totalItems' => (int) $total->totalItems
+            ];
             return $prep;
         endif;
         return $prep->get();
@@ -226,6 +241,27 @@ trait Model
         return new static;
     }
 
+    /**
+     * Get paginated format of a data
+     * @param int $page, the current page to start from
+     * @param int $limit, the maximum number of data to be returned
+     * @param string $orderCol, Column to set order
+     * @param string $order, the order of line to be returned (ASC, DESC)
+     * @param int $offset, the offset of page to start
+     */
+    public static function paginate(int $page = 1, int $limit = LIMIT, string $orderCol = 'id', string $order = DESC, int $offset = 0)
+    {
+        self::$pagination = Paginate::page([
+            'page' => $page,
+            'limit' => $limit,
+            'orderCol' => $orderCol,
+            'order' => $order,
+            'offset' => $offset
+        ]);
+
+        return new static;
+    }
+
     // /**
     //  * Create a new row
     //  * @param array $array fields array
@@ -260,6 +296,8 @@ trait Model
     {
         return self::get();
     }
+
+
 
 
     protected static function runMultiple($toRun, $prep)

@@ -16,22 +16,28 @@ class CheckoutSession extends Authenticated
         $data = $data->pipe(['price' => $data->price_id()->isrequired()->price_id]);
         $checkoutData = $this->checkoutIn($data->price, $this->user->id);
 
-        \Stripe\Stripe::setApiKey(Env::STRIPE_KEY());
-        $session = \Stripe\Checkout\Session::create([
-            'success_url' => Env::BASE_URI().'stripe/success?session_id={CHECKOUT_SESSION_ID}&papify='.$checkoutData['token'],
-            'cancel_url' => Env::BASE_URI().'stripe/canceled',
-            'mode' => 'subscription',
-            'line_items' => [[
-              'price' => $data->price,
-              // For metered billing, do not pass quantity
-              'quantity' => 1,
-            ]],
-          ]);
-
-          Res::send([
-            'session_id' => $session->id,
-            'url' => $session->url
-          ]);
+        try {
+            //code...
+            \Stripe\Stripe::setApiKey(Env::STRIPE_KEY());
+            $session = \Stripe\Checkout\Session::create([
+                'success_url' => Env::BASE_URI().'stripe/success?session_id={CHECKOUT_SESSION_ID}&papify='.$checkoutData['token'],
+                'cancel_url' => Env::BASE_URI().'stripe/canceled',
+                'mode' => 'subscription',
+                'line_items' => [[
+                  'price' => $data->price,
+                  // For metered billing, do not pass quantity
+                  'quantity' => 1,
+                ]],
+              ]);
+    
+              Res::send([
+                'session_id' => $session->id,
+                'url' => $session->url
+              ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            Res::status(400)::error(['message' => $th->getMessage()]);
+        }
     }
 
 

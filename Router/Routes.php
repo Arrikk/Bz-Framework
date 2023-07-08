@@ -3,8 +3,11 @@
 use App\Controllers\Company\Companies;
 use App\Controllers\Features\Features;
 use App\Controllers\Finance\Wallets\Wallets;
+use App\Controllers\Home;
 use App\Controllers\Members\Members;
 use App\Controllers\Plans\Plans;
+use App\Controllers\Podcast\Categories;
+use App\Controllers\Podcast\Podcasts;
 use App\Controllers\Stripe\Checkout\CallbackUrl;
 use App\Controllers\Stripe\Portal;
 use App\Controllers\Stripe\Webhook\Webhook;
@@ -70,3 +73,23 @@ Route::post('manage-subscription', [Portal::class, 'portal']);
 Route::get('payment/success', [CallbackUrl::class, 'success']);
 Route::get('payment/cancel', [CallbackUrl::class, 'cancel']);
 Route::post('webhook', [Webhook::class, 'webhook']);
+
+//------------------------------------------------------------------------------------------------
+// ========================= PODCAST ROUTE ===================================
+//------------------------------------------------------------------------------------------------
+
+Route::post('admin/podcasters', [Podcasts::class, 'podcasters']);
+Route::get('admin/metrics', [Home::class, 'metrics']);
+//------------------------------------------------------------------------------------------------
+// ========================= PODCAST ROUTE ===================================
+//------------------------------------------------------------------------------------------------
+
+Route::post('podcast/publish', [Podcasts::class, 'publish']);
+Route::post('podcast/my-podcast', [Podcasts::class, 'my-podcasts']);
+Route::get('podcast/recent', [Podcasts::class, 'recently-viewed']);
+Route::get('podcast/popular', [Podcasts::class, 'popular-podcasts']);
+Route::post('podcast/find', [Podcasts::class, 'find-podcasts']);
+Route::post('podcast/category', [Categories::class, 'category']);
+Route::get('podcast/categories', [Categories::class, 'categories']);
+Route::get('podcast/{id:[\d\w]+}', [Podcasts::class, 'view']);
+Route::put('podcast/{id:[\d\w]+}', [Podcasts::class, 'update']);
