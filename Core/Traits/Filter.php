@@ -2,6 +2,8 @@
 
 namespace Core\Traits;
 
+use Core\Http\Res;
+
 trait Filter
 {
     private $objectFilter;
@@ -33,7 +35,9 @@ trait Filter
         if (empty((array) $object)) return $this;
 
         foreach ($args as $toAppend => $value) :
-            $object->$toAppend = $value;
+            if (is_callable($value)) $object->$toAppend = call_user_func_array($value, []);
+            else
+                $object->$toAppend = $value;
         endforeach;
 
         $this->objectFilter = $object;

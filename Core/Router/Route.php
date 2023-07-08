@@ -2,6 +2,7 @@
 
 namespace Core\Router;
 
+use Core\Http\Res;
 use Core\Request;
 
 class Route

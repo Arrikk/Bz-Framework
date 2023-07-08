@@ -10,8 +10,35 @@ class FileService
     protected $fileSize;
     protected $fileExtension;
     protected $maxSize = 1024;
-    protected $fileExtensions = ["pdf", "docx", "xlsx", "png", "jpeg", "jpg", "gif", "svg", "doc", "txt", "html", "htm"];
-    public $fileTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "image/png", "image/jpeg"];
+    protected $fileExtensions = [
+        "pdf",
+        "docx",
+        "xlsx",
+        "png",
+        "jpeg",
+        "jpg",
+        "gif",
+        "svg",
+        "doc",
+        "txt",
+        "html",
+        "htm"
+    ];
+    public $fileTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "image/png",
+        "image/jpeg",
+        'audio/mpeg',
+        'audio/wav',
+        'audio/aac',
+        'audio/ogg',
+        'audio/flac',
+        'audio/x-m4a'
+    ];
     protected $fileError;
     protected $filePath = FILE_PATH;
     protected $requiredParams = ['file'];
@@ -44,7 +71,35 @@ class FileService
 
     protected function validFileData(): FileService
     {
-        if(!isset($this->file['name']) || !is_object( (object) $this->file))  $this->fileError['file'] = "File Not Found... File Error";
+        if (!isset($this->file['name']) || !is_object((object) $this->file))  $this->fileError['file'] = "File Not Found... File Error";
+        if (isset($this->file['error']) && $this->file['error'] > 0):
+            switch($this->file['error']):
+                case UPLOAD_ERR_INI_SIZE:
+                    $this->fileError['error'] = "The uploaded file exceeds the upload_max_filesize directive in php.ini.";
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    $this->fileError['error'] = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.";
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $this->fileError['error'] = "The uploaded file was only partially uploaded.";
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    $this->fileError['error'] = "No file was uploaded.";
+                    break;
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    $this->fileError['error'] = "Missing a temporary folder.";
+                    break;
+                case UPLOAD_ERR_CANT_WRITE:
+                    $this->fileError['error'] = "Failed to write file to disk.";
+                    break;
+                case UPLOAD_ERR_EXTENSION:
+                    $this->fileError['error'] = "A PHP extension stopped the file upload.";
+                    break;
+                default:
+                    $this->fileError['error'] = "An unknown error occurred.";
+                    break;
+            endswitch;
+        endif;
         // if (empty($this->file['name'] || $this->file['error'] > 0)) $this->fileError['file'] = "File Not Found... File Error";
         return $this;
     }

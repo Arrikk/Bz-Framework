@@ -1,6 +1,10 @@
 <?php
+
 namespace App\Controllers\Authenticated;
 
+use App\Models\Employee;
+use App\Models\Manager;
+use App\Models\Patient;
 use App\Models\User;
 use App\Token;
 use Core\Controller;
@@ -9,6 +13,8 @@ use Core\Http\Res;
 class Authenticated extends Controller
 {
     protected $user;
+    protected $authenticated;
+    protected $modelClass;
     protected function before()
     {
         parent::before();
@@ -16,9 +22,20 @@ class Authenticated extends Controller
         if (isset($header['Authorization'])) :
 
             $token = explode(' ', $header['Authorization']);
-            $token = $token[1];
+            $token = ($token[1] ?? null);
             if ($token = Token::decode($token)) :
                 $user = json_decode($token);
+                $this->authenticated = $user;
+                $this->hasAccess(($user->role ?? null));
+
+                // $this->modelClass =  $user->is_company ?
+                //     User::class : (($user->is_employee ?? false) ?
+                //         Employee::class : (($user->is_manager ?? false) ?
+                //             Manager::class :
+                //             Patient::class
+                //         )
+                //     );
+
                 if (time() > $user->expires) :
                     Res::status(400)->error(['token' => "Token Expired"]);
                 endif;
@@ -30,12 +47,26 @@ class Authenticated extends Controller
         endif;
 
 
-        if (isset($user->id)){
-            $this->user = User::findOne(['id' => $user->id]);
-            if(!$this->user) Res::status(404)->error([
+        if (isset($user->id)) {
+            $this->user = User::findOne(['_id' => $user->id]);
+            if (!$this->user) Res::status(404)->error([
                 'message' => "User not found",
                 'token' => $user
             ]);
         }
+    }
+
+    function hasAccess($userType)
+    {
+        $accessTo = ($this->route_params['access'] ?? null);
+        if($accessTo == '' || !$accessTo || empty($accessTo)) return;
+        if (is_array($accessTo)) :
+            if (!in_array($userType, $accessTo)) :
+                Res::status(400)->error("Permission denied");
+            endif;
+        else :
+            if ($userType !== $accessTo)
+                Res::status(400)::error("Permission denied");
+        endif;
     }
 }

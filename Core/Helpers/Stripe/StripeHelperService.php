@@ -3,6 +3,7 @@
 namespace Core\Helpers\Stripe;
 
 use Core\Env;
+use Core\Http\Res;
 
 class StripeHelperService
 {
@@ -10,7 +11,13 @@ class StripeHelperService
     
     public function __construct()
     {
-        $this->stripe = 
-        new \Stripe\StripeClient(Env::STRIPE_SECRET_KEY());
+        try {
+            //code...
+            $this->stripe = 
+            new \Stripe\StripeClient(Env::STRIPE_SECRET_KEY());
+        } catch (\Throwable $th) {
+            //throw $th;
+            Res::status(400)::error(['message' => $th->getMessage()]);
+        }
     }
 }
