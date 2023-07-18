@@ -16,7 +16,7 @@ use PDOException;
  * ==============================================
  */
 
- #[AllowDynamicProperties]
+#[AllowDynamicProperties]
 abstract class Base
 {
     protected $i = 0;
@@ -32,6 +32,7 @@ abstract class Base
     protected $both;
     protected $last;
     protected $in;
+    protected $createMany = false;
     protected static $concat = 'concat';
     protected static $replace = 'replace';
     protected static $math = 'math';
@@ -68,7 +69,7 @@ abstract class Base
         // if($db === null){
         try {
             // Config::clearDB();
-            $db = new PDO('mysql:host=' . Env::DB_HOST() . ';dbname=' . Env::DB_NAME() . ';charset=utf8mb4;port='.Env::DB_PORT(), Env::DB_USER(), ENV::DB_PASSWORD());
+            $db = new PDO('mysql:host=' . Env::DB_HOST() . ';dbname=' . Env::DB_NAME() . ';charset=utf8mb4;port=' . Env::DB_PORT(), Env::DB_USER(), ENV::DB_PASSWORD());
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $db->exec("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
             return $db;
@@ -85,14 +86,31 @@ abstract class Base
     private function _create(string $table, array $data = [])
     {
 
-        $fields = '`'.implode('`, `', array_keys($data)).'`';
-        $values = ':' . implode(', :', array_keys($data));
+        $set = $data;
+        if ($this->createMany) :
+            $newData = [];
+            foreach ($data as $child) :
+                $newData [] = (array) $child;
+            endforeach;
+            $data = $newData;
+            $set = $data[0];
+            unset($newData);
+
+        endif;
+    
+        $fields = '`' . implode('`, `', array_keys($set)) . '`';
+        $values = ':' . implode(', :', array_keys($set));
 
         $query = "INSERT INTO `{$table}` ({$fields}) VALUES ({$values})";
 
         $this->query = $query;
         $this->fields = $data;
         return $this;
+    }
+
+    public function set($name, $value)
+    {
+        $this->{$name} = $value;
     }
 
 
@@ -241,7 +259,8 @@ abstract class Base
         $this->query .= " RIGHT JOIN $right";
         return $this;
     }
-    private function _join(string $join){
+    private function _join(string $join)
+    {
         $this->query .= " JOIN $join";
         return $this;
     }
@@ -324,20 +343,33 @@ abstract class Base
             //code...
             $db =  $this->db();
             $stmt = $db->prepare($this->query);
+
+            if ($this->createMany) :
+                $last = [];
+                foreach ($this->fields as $data) {
+                    foreach ($data as $key => $value) {
+                        $stmt->bindValue(":$key", $value);
+                    }
+                    $stmt->execute();
+                    $last[] = $db->lastInsertId();
+                }
+                return $last;
+            endif;
+
             foreach ($this->fields as $key => $value) {
                 $stmt->bindValue(":$key", $value);
             }
-    
+
             if ($this->select ?? false) {
                 $stmt->execute();
-                if ($this->class && $this->class !== null) {
+                if ($this->class) {
                     $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
                     return $stmt->fetch();
-                } elseif ($this->both && $this->both !== null) {
+                } elseif ($this->both) {
                     return $stmt->fetchAll(PDO::FETCH_BOTH);
-                } elseif ($this->assoc && $this->assoc !== null) {
+                } elseif ($this->assoc) {
                     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-                } elseif ($this->obj || $this->obj !== null) {
+                } elseif ($this->obj) {
                     return $stmt->fetch(PDO::FETCH_OBJ);
                 } else {
                     // $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
