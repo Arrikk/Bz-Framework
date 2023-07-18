@@ -99,10 +99,25 @@ class Filters extends Override
         $object = $this->objectFilter;
         if (empty((array) $object)) return $this;
 
-        foreach ($object as $key => $value) :
-            if (!in_array($key, $args)) unset($object->$key);
-            continue;
-        endforeach;
+        if (is_array($object)) :
+            foreach ($object as $key => $data) :
+                foreach($data as $dataKey => $values){
+                    // foreach ($args as $only) :
+                        if (!in_array($dataKey, $args)) unset($object[$key]->$dataKey);
+                    // endforeach;
+                }
+            endforeach;
+        else :
+            foreach ($object as $key => $value) :
+                if (!in_array($key, $args)) unset($object->$key);
+                continue;
+            endforeach;
+        endif;
+
+        // foreach ($object as $key => $value) :
+        //     if (!in_array($key, $args)) unset($object->$key);
+        //     continue;
+        // endforeach;
 
         $this->objectFilter = $object;
         return $this;
