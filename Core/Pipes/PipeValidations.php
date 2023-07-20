@@ -179,7 +179,7 @@ abstract class PipeValidations implements PipeValidationInterface
     }
     public function replace($regex, $value = ""): PipeValidations
     {
-        $this->{$this->pipe_property_name} = preg_replace('/^' . $regex . '$/i', $this->{$this->pipe_property_name}, $value);
+        $this->{$this->pipe_property_name} = preg_replace($regex, $value, $this->{$this->pipe_property_name});
         return $this;
     }
     public function default($default): PipeValidations
@@ -190,7 +190,8 @@ abstract class PipeValidations implements PipeValidationInterface
     }
     public function serialize()
     {
-        $value = trim($this->{$this->pipe_property_name});
+        $value = $this->{$this->pipe_property_name} === null ? '' : $this->{$this->pipe_property_name};
+        $value = trim($value);
         $value = htmlspecialchars($value);
         $value = stripslashes($value);
         $this->{$this->pipe_property_name} = $value;
