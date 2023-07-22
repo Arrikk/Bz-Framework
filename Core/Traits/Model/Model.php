@@ -258,15 +258,46 @@ trait Model
         return $save->get();
     }
 
+       /**
+     * Update many rows
+     * @param array $array fields array = [['email' => EMAIL, 'name' => NAME], ['name' => ']] etc
+     * @param string $table.. dump to another table insead of set table
+     * @return array return boolean, string or an object depending 
+     * on your second args and last
+     */
+    public static function updateMany(array $array, $conditions = [], string $table = '',  bool $exec = true)
+    {
+        $self = new static;
+        $self->set('createMany', true);
+
+        if ($table == '') $table = static::table();
+        $save = $self->update($table, $array);
+
+        if (is_array($conditions) && count($conditions) > 0)
+            foreach ($conditions as $condition => $value) {
+                $save->{$condition}($value);
+            }
+        if ($exec) :
+            $save = $save->exec();
+            return self::whereIn('id', $save);
+        endif;
+        return $save->get();
+    }
+
     public static function whereIn(string $column, array $value) {
         $data = (string) implode(',' , $value);
         return self::find([ '$.where' => self::in($column, $data)]);
     }
 
+
     public static function col($col)
     {
         self::$col = $col;
         return new static;
+    }
+
+    public function modify($update){
+        return self::findAndUpdate(['id' => $this->id], $update);
     }
 
     /**
