@@ -68,10 +68,28 @@ trait Model
     public static function find(array $array = [], string $query = '*', bool $exec = true)
     {
         $total = 0;
-        if(self::$pagination):
+        if (self::$pagination) :
             $array['$.order'] = self::$pagination->order;
             $array['$.limit'] = self::$pagination->limit;
-            $total = self::select('count(*) as totalItems', self::table())->obj()->exec();
+            $total = self::select('count(*) as totalItems', self::table());
+            foreach ($array as $key => $value) {
+                $key = str_replace('$.', '', $key);
+                $key = explode('.', $key);
+                $keyPref = $key;
+                $key = $key[0];
+                if ($key == 'where' || $key == 'and' || $key == 'or' || $key == 'in') :
+                    if (isset($key[1])) {
+                        if ($value)
+                            $total->{$keyPref[0]}("$keyPref[1] = '$value'");
+                    } else {
+                        if ($value) $total->{$key}($value);
+                    }
+                else :
+                endif;
+                continue;
+                echo $key;
+            };
+            $total = $total->obj()->exec();
         endif;
 
         $prep = static::select($query, self::table());
