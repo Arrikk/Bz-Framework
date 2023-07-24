@@ -78,7 +78,7 @@ trait Model
                 $keyPref = $key;
                 $key = $key[0];
                 if ($key == 'where' || $key == 'and' || $key == 'or' || $key == 'in') :
-                    if (isset($key[1])) {
+                    if (isset($keyPref[1])) {
                         if ($value)
                             $total->{$keyPref[0]}("$keyPref[1] = '$value'");
                     } else {
