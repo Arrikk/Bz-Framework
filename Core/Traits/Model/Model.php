@@ -68,10 +68,28 @@ trait Model
     public static function find(array $array = [], string $query = '*', bool $exec = true)
     {
         $total = 0;
-        if(self::$pagination):
+        if (self::$pagination) :
             $array['$.order'] = self::$pagination->order;
             $array['$.limit'] = self::$pagination->limit;
-            $total = self::select('count(*) as totalItems', self::table())->obj()->exec();
+            $total = self::select('count(*) as totalItems', self::table());
+            foreach ($array as $key => $value) {
+                $key = str_replace('$.', '', $key);
+                $key = explode('.', $key);
+                $keyPref = $key;
+                $key = $key[0];
+                if ($key == 'where' || $key == 'and' || $key == 'or' || $key == 'in') :
+                    if (isset($keyPref[1])) {
+                        if ($value)
+                            $total->{$keyPref[0]}("$keyPref[1] = '$value'");
+                    } else {
+                        if ($value) $total->{$key}($value);
+                    }
+                else :
+                endif;
+                continue;
+                echo $key;
+            };
+            $total = $total->obj()->exec();
         endif;
 
         $prep = static::select($query, self::table());
@@ -258,15 +276,46 @@ trait Model
         return $save->get();
     }
 
+       /**
+     * Update many rows
+     * @param array $array fields array = [['email' => EMAIL, 'name' => NAME], ['name' => ']] etc
+     * @param string $table.. dump to another table insead of set table
+     * @return array return boolean, string or an object depending 
+     * on your second args and last
+     */
+    public static function updateMany(array $array, $conditions = [], string $table = '',  bool $exec = true)
+    {
+        $self = new static;
+        $self->set('createMany', true);
+
+        if ($table == '') $table = static::table();
+        $save = $self->update($table, $array);
+
+        if (is_array($conditions) && count($conditions) > 0)
+            foreach ($conditions as $condition => $value) {
+                $save->{$condition}($value);
+            }
+        if ($exec) :
+            $save = $save->exec();
+            return self::whereIn('id', $save);
+        endif;
+        return $save->get();
+    }
+
     public static function whereIn(string $column, array $value) {
         $data = (string) implode(',' , $value);
         return self::find([ '$.where' => self::in($column, $data)]);
     }
 
+
     public static function col($col)
     {
         self::$col = $col;
         return new static;
+    }
+
+    public function modify($update){
+        return self::findAndUpdate(['id' => $this->id], $update);
     }
 
     /**

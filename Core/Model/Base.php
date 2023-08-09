@@ -90,14 +90,14 @@ abstract class Base
         if ($this->createMany) :
             $newData = [];
             foreach ($data as $child) :
-                $newData [] = (array) $child;
+                $newData[] = (array) $child;
             endforeach;
             $data = $newData;
             $set = $data[0];
             unset($newData);
 
         endif;
-    
+
         $fields = '`' . implode('`, `', array_keys($set)) . '`';
         $values = ':' . implode(', :', array_keys($set));
 
@@ -141,7 +141,21 @@ abstract class Base
     {
         $column = '';
         $i = 1;
-        foreach ($fields as $key => $value) {
+
+
+        $set = $fields;
+        if ($this->createMany) :
+            $newfields = [];
+            foreach ($fields as $child) :
+                $newfields[] = (array) $child;
+            endforeach;
+            $data = $newfields;
+            $set = $data[0];
+            unset($newData);
+
+        endif;
+
+        foreach ($set as $key => $value) {
             if ($opt) {
                 if (is_string($opt) && $opt == self::$concat) :
                     $column .= "`{$key}` = " . $this->concat($key, ":{$key}");
@@ -154,7 +168,7 @@ abstract class Base
                 $column .= "`{$key}` = :{$key}";
             }
 
-            if ($i < count($fields)) {
+            if ($i < count($set)) {
                 $column .= ', ';
             }
             $i++;
