@@ -77,18 +77,22 @@ trait Model
                 $key = explode('.', $key);
                 $keyPref = $key;
                 $key = $key[0];
-                if ($key == 'where' || $key == 'and' || $key == 'or' || $key == 'in') :
+                $key = preg_replace('/\d/', '', $key);
+                // echo $key;
+                $keys = ['or', 'on', 'and', 'in', 'where', 'left', 'join', 'inner', 'outer'];
+                if (in_array($key, $keys)) :
                     if (isset($keyPref[1])) {
                         if ($value)
                             $total->{$keyPref[0]}("$keyPref[1] = '$value'");
                     } else {
+                        // echo json_encode("$key($value)");
                         if ($value) $total->{$key}($value);
                     }
                 else :
                 endif;
                 continue;
-                echo $key;
             };
+            // exit;
             $total = $total->obj()->exec();
         endif;
 
@@ -98,7 +102,7 @@ trait Model
         }
         if ($exec) :
             $prep = $prep->exec();
-            if(self::$pagination) return (object)[
+            if (self::$pagination) return (object)[
                 'items' => $prep,
                 'page' => self::$pagination->page,
                 'limit' => self::$pagination->pageLimit,
