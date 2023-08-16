@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Success</title>
+    <style>
+        @keyframes splash {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes checkmark {
+            0% {
+                stroke-dashoffset: 52;
+            }
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes countdown {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            /* background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); */
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+            fill: none;
+            stroke: #4CAF50;
+            stroke-width: 3px;
+            transition: transform 0.3s ease-in-out;
+            animation: splash 0.5s ease-in-out forwards;
+        }
+
+        .success-icon.animate {
+            animation-name: checkmark, splash;
+            animation-duration: 0.5s, 0.5s;
+            animation-timing-function: ease-in-out;
+            animation-fill-mode: forwards;
+            stroke-dasharray: 52;
+            stroke-dashoffset: 52;
+        }
+
+        .success-icon:hover {
+            transform: scale(1.2);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .countdown {
+            font-size: 20px;
+            color: #999999;
+            margin-bottom: 10px;
+            animation: countdown 1s linear infinite;
+        }
+
+        .contact-support {
+            font-size: 16px;
+            color: #999999;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="circle" cx="26" cy="26" r="25" fill="none" stroke="#4CAF50" stroke-width="3" />
+            <path class="checkmark" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" stroke="#4CAF50" stroke-width="3" />
+        </svg>
+        <h1>Payment Successful</h1>
+        <p>Thank you for your payment.</p>
+        <div class="countdown"></div>
+        <p class="contact-support">If you have any questions or need further assistance, please contact our support team.</p>
+        <a href="mailto:support@example.com" class="button">Contact Support</a>
+    </div>
+
+    <script>
+        // Redirect to another page after 3 seconds
+        var countdown = 3; // Number of seconds to countdown
+        var countdownElement = document.querySelector('.countdown');
+        var countdownInterval = setInterval(function() {
+            countdownElement.innerText = countdown;
+            countdown--;
+
+            if (countdown < 0) {
+                clearInterval(countdownInterval);
+                window.location.href = "https://pipify1-elfque.vercel.app/settings/billing";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

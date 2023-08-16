@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Expired</title>
+    <style>
+        @keyframes splash {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes hourglass {
+            0% {
+                stroke-dashoffset: 0;
+            }
+            100% {
+                stroke-dashoffset: 320;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .expired-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+            fill: none;
+            stroke: #FF0000;
+            stroke-width: 3px;
+            transition: transform 0.3s ease-in-out;
+            animation: splash 0.5s ease-in-out forwards;
+        }
+
+        .expired-icon.animate {
+            animation-name: hourglass, splash;
+            animation-duration: 0.5s, 0.5s;
+            animation-timing-function: ease-in-out;
+            animation-fill-mode: forwards;
+            stroke-dasharray: 320;
+            stroke-dashoffset: 320;
+        }
+
+        .expired-icon:hover {
+            transform: scale(1.2);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .contact-support {
+            font-size: 16px;
+            color: #999999;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #FF0000;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: #CC0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg class="expired-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <path class="hourglass" fill="none" d="M12 8L40 8M12 44L40 44M20 8L20 44M32 8L32 44" stroke="#FF0000" stroke-width="3" />
+        </svg>
+        <h1>Page Expired</h1>
+        <p>If this payment was successful, please contact support with the below reference ID.</p>
+        <p class="contact-support">Reference ID: <?= $ref ?? 'N/A' ?></p>
+        <a href="mailto:support@example.com" class="button">Contact Support</a>
+    </div>
+
+</body>
+</html>

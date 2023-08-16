@@ -94,9 +94,13 @@ class Token
         return self::mkToken('dec', $encoded);
     }
 
-    public function decodeJSON(string $decoded)
+    public static function decodeJSON(string $decoded)
     {
         return json_decode(self::mkToken('dec', $decoded));
+    }
+
+    static function uuid() {
+        return bin2hex(openssl_random_pseudo_bytes((14)));
     }
 
     public function string()
