@@ -49,7 +49,7 @@ abstract class PipeValidations implements PipeValidationInterface
 
     public function min(int $min = 4, string $message = null): PipeValidations
     {
-        if (strlen($this->{$this->pipe_property_name}) < $min)
+        if ($this->{$this->pipe_property_name} === null || strlen($this->{$this->pipe_property_name}) < $min)
             return $this->setError($this->pipe_property_name, $message ?? "Value cannot be lesser than $min");
         return $this;
     }

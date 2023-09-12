@@ -70,7 +70,8 @@ class Auth extends User
         endif;
 
         $token = Token::mkToken('enc', json_encode([
-            'id' => (int) $account->id,
+            'id' => $account->_id,
+            '_id' => $account->id,
             'expires' => strtotime('+1MONTH')
         ]));
         return [
@@ -93,7 +94,8 @@ class Auth extends User
 
         if ($loggedIn) :
             $token =  Token::mkToken('enc', json_encode([
-                'id' => (int) $loggedIn->id,
+                'id' => $loggedIn->_id,
+                '_id' => (int) $loggedIn->id,
                 'expires' => strtotime('+1MONTH')
 
             ]));
