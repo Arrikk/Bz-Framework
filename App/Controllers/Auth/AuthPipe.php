@@ -13,11 +13,13 @@ class AuthPipe extends Controller
             'email' => $pipe
                 ->email()
                 ->isemail()->email,
-            'fullname' => $pipe
-                ->fullname()
-                ->min(5)
-                ->match('/^[\da-z ]+$/i')
-                ->fullname,
+            // 'fullname' => $pipe
+            //     ->fullname()
+            //     ->min(5)
+            //     ->match('/^[\da-z ]+$/i')
+            //     ->fullname,
+            'first_name' => $pipe->firstname()->min(2)->match('/^[\da-z ]+$/i')->firstname,
+            'last_name' => $pipe->lastname()->min(2)->match('/^[\da-z ]+$/i')->lastname,
             'password_hash' => $pipe
                 ->password()
                 ->isrequired()

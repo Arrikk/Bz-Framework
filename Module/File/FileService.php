@@ -2,6 +2,7 @@
 
 namespace Module\File;
 
+use Core\Env;
 use Core\Http\Res;
 
 class FileService
@@ -22,9 +23,21 @@ class FileService
         "doc",
         "txt",
         "html",
-        "htm"
+        "htm",
+        "ods",
+        "rtf",
+        "odp",
+        "ppt",
+        "pptx",
+        "odt"
     ];
     public $fileTypes = [
+        "application/rtf",
+        "text/plain",
+        "application/vnd.oasis.opendocument.text",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/vnd.oasis.opendocument.presentation",
         "application/pdf",
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -177,6 +190,7 @@ class FileService
             'mimeType' => $this->fileMime,
             'name' => $fileName,
             'path' => $fileFullName,
+            'abs_path' => Env::BASE_URI().$fileFullName,
             'size' => $this->fileSize($this->file['size'])
         ];
     }
