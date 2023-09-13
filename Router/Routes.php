@@ -2,7 +2,7 @@
 
 use App\Controllers\Company\Companies;
 use App\Controllers\Features\Features;
-use App\Controllers\Files\Folders;
+use App\Controllers\FileManager\Folders\Folders;
 use App\Controllers\Finance\Wallets\Wallets;
 use App\Controllers\Home;
 use App\Controllers\Members\Members;
@@ -70,3 +70,6 @@ Route::post('folder-create', [Folders::class, 'create']); // Create a new folder
 Route::get('folders-get', [Folders::class, 'folders']); // Get all my Folders
 Route::get('folder-get', [Folders::class, 'folder']); // Get a folder by their params
 Route::post('folder-update', [Folders::class, 'update-folder']); // Get a folder by their params
+Route::delete('folder-delete/{id:[\d\w]+}', [Folders::class, 'delete-folder']); // Get a folder by their params
+
+Route::post('file-upload', )
