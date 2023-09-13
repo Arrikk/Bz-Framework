@@ -74,4 +74,7 @@ Route::post('folder-update', [Folders::class, 'update-folder']); // Get a folder
 Route::delete('folder-delete/{id:[\d\w]+}', [Folders::class, 'delete-folder']); // Get a folder by their params
 
 Route::post('file-upload', [Files::class, 'upload']);
+// Route::post('files-get', [Files::class, 'files']);
+Route::get('file-view', [Files::class, 'file']);
+Route::get('file-view', [Files::class, 'file']);
 Route::delete('file-delete', [Files::class, 'delete-perm']);

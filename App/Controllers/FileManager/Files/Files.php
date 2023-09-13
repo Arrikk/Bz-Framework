@@ -31,22 +31,21 @@ class Files extends FileService
             // This method takes the processed file data and the 
             // user ID as arguments and returns the folder path.  
             $folderName = $this->getFolderUploadPath($piped, $this->user->_id);
-           
+
             // Next, the function calls the "uploadService" method passing the processed file data and the folder path as arguments. 
             // This method is responsible for uploading the file to the specified folder.  
             $upload = $this
                 ->uploadService($piped, $folderName)
-            // After that, the function calls the "_uploadDbService" method on the returned object from the "uploadService" method. 
-            // This method is responsible for saving the file upload details to the database
+                // After that, the function calls the "_uploadDbService" method on the returned object from the "uploadService" method. 
+                // This method is responsible for saving the file upload details to the database
                 ->_uploadDbService();
-    
-             //  Finally, the function returns a JSON response with a success message and the formatted file data. 
-             // # Return Response.... with formatted data..  
-             Res::json([
+
+            //  Finally, the function returns a JSON response with a success message and the formatted file data. 
+            // # Return Response.... with formatted data..  
+            Res::json([
                 'message' => "File uploaded successfully",
                 'data' => $this->formatFileService($upload, false)
             ]);
-            
         } catch (\Throwable $th) {
             // If any error occurs during the file upload process, the catch block is executed, and an error response is returned.
             //throw $th;
@@ -55,25 +54,40 @@ class Files extends FileService
     }
 
     /**
-     * Method to retrieve a single file from server
-     * Method controller file receives a GET Pipe object service
-     * to retrieve by their ID and user....
-     * @param Pipes $data, Request Object
+     * Handle the '_file' endpoint.
+     *
+     * This method is responsible for processing a file based on the provided Pipes data.
+     * It retrieves and validates the file ID, then retrieves the file details using the
+     * FileService and returns the result in a JSON response.
+     *
+     * @param Pipes $data The Pipes object containing the file ID.
+     *
+     * @return void
      */
     public function _file(Pipes $data)
     {
         try {
-            //code...
-            $fileID = $this->route_params['id'];
-            $file = $this->fileService($fileID, $this->user->id);
-            Res::json([ 'message' => 'File', 'data' => $file]);
+            // Retrieve the file ID from the data.
+            $fileID = $data->file;
+    
+            // Validate that the 'file' parameter is required.
+            $this->required([
+                'file' => $fileID
+            ]);
+    
+            // Retrieve file details using the FileService.
+            $file = $this->fileService($fileID, $this->user->_id);
+    
+            // Return a JSON response with the file details.
+            Res::json(['message' => 'File', 'data' => $file]);
         } catch (\Throwable $th) {
-            //throw $th;
+            // Handle any exceptions and return a 400 Bad Request response with the error message.
             Res::status(400)->error($th->getMessage());
         }
     }
-
+    
     /**
+     * 
      * Method to retrieve all file from server
      * Method controller file receives a GET Pipe object service
      * to retrieve by user....
@@ -86,14 +100,17 @@ class Files extends FileService
             $paginated = Paginate::page($this->filesPipe($pipe));
             $files = $this->user->paginate($paginated->page)->files();
             $formatted = $this->formatFilesService($files);
-            Res::json([ 'message' => 'files', 'data' => $formatted]);
+            Res::json(['message' => 'files', 'data' => $formatted]);
         } catch (\Throwable $th) {
             //throw $th;
             Res::status(400)->error($th->getMessage());
         }
     }
 
-     /**
+    /**
+     * This is a function named  _deletePerm  that takes a parameter  $param . 
+      It attempts to perform some code operations, including finding and deleting a file with the given ID ( $fileID ) using the  ModelsFile  model. 
+      It also deletes the physical file from the file system using the file path stored in the  $doc  variable.  
      * Method to delete a single file from server
      * Method controller file receives a DELETE Pipe object service
      * to retrieve by their ID and user....
@@ -102,10 +119,18 @@ class Files extends FileService
     public function _deletePerm($param)
     {
         try {
-            //code...
+
+            // Get the file ID from the server get variable...
             $fileID = $param->file;
+            // Force the acceptance of the file ID to be provided.. 
+            $this->required([
+                'file' => $fileID
+            ]);
+            // use the fileService method from FileService class to make some operations on the file to be deleted wch includes verification of owner and permissions and existence of the file.
             $doc = $this->fileService($fileID, $this->user->_id);
+            // find and delete a file with the given ID ( $fileID ) using the  ModelsFile  model. 
             ModelsFile::findAndDelete(['_id' => $doc->id]);
+            // delete the physical file from the file system using the file path stored in the $doc variable.  
             unlink($doc->file_path);
             Res::json(['message' => 'File Permanently deleted']);
         } catch (\Throwable $th) {

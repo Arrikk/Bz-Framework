@@ -24,6 +24,30 @@ class File extends FileService
 
         return $file;
     }
+    public static function uploadSecurely($options)
+    {
+        $fileService = new FileService($options);
+
+        $file = $fileService
+            ->validFileData()
+            ->fileError()
+            ->validateFileExtension()
+            ->fileError()
+            ->validateFileType()
+            ->fileError()
+            ->encryptFile();
+
+        return $file;
+    }
+
+    public static function retriveSecurely($filePath): string
+    {
+        return self::decryptFile($filePath);
+    }
+
+
+
+
 
     public static function uploadMultiple(array $options)
     {

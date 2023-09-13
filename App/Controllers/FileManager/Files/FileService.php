@@ -80,7 +80,7 @@ class FileService extends Authenticated
      */
     public function uploadService($piped, $folder = "Document"):FileService
     {
-        $file = FileFile::upload([
+        $file = FileFile::uploadSecurely([
             'name' => $piped->name,
             'file' => $piped->file,
             'path' => "Public/".$folder.'/' . $this->user->_id

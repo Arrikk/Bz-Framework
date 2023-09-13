@@ -4,6 +4,7 @@ namespace Module\File;
 
 use Core\Env;
 use Core\Http\Res;
+use Module\Encryption;
 
 class FileService
 {
@@ -85,8 +86,8 @@ class FileService
     protected function validFileData(): FileService
     {
         if (!isset($this->file['name']) || !is_object((object) $this->file))  $this->fileError['file'] = "File Not Found... File Error";
-        if (isset($this->file['error']) && $this->file['error'] > 0):
-            switch($this->file['error']):
+        if (isset($this->file['error']) && $this->file['error'] > 0) :
+            switch ($this->file['error']):
                 case UPLOAD_ERR_INI_SIZE:
                     $this->fileError['error'] = "The uploaded file exceeds the upload_max_filesize directive in php.ini.";
                     break;
@@ -171,6 +172,101 @@ class FileService
         return $this;
     }
 
+    function encryptionConfig(): object
+    {
+
+        $encAlg = "AES-256-CBC";
+        $hash = 'sha256';
+        $encKEy = "gIVcwCv9zZ2fR8pkKHcH";
+
+        $iv = substr($encKEy, 0, 14);
+        $secret = hash($hash, $encKEy);
+        $init_vector = substr(hash($hash, $iv), 0, 16);
+
+        return (object) [
+            'algo' => $encAlg,
+            'secret' => $secret,
+            'iv' => $init_vector
+        ];
+    }
+
+    protected function encryptFile()
+    {
+        $fileTemp = $this->getFileTemp();
+        $fileToEncrypt = file_get_contents($fileTemp);
+        $uploadPath = $this->getFileName(true, true, true);
+        $fileName = $this->getFileName();
+
+        $enc = openssl_encrypt(
+            $fileToEncrypt,
+            Encryption::Algorithm->get(),
+            Encryption::Secret->get(),
+            0,
+            Encryption::IV->get()
+        );
+
+        file_put_contents($uploadPath, $enc);
+
+        $uploadedData = $this->getFullUploadDetails($fileName, $uploadPath);
+        return $uploadedData;
+    }
+
+    public static function decryptFile($filePath)
+    {
+        $fileToDecrypt = file_get_contents($filePath);
+        $dec = openssl_decrypt(
+            $fileToDecrypt,
+            Encryption::Algorithm->get(),
+            Encryption::Secret->get(),
+            0,
+            Encryption::IV->get()
+        );
+
+        // $data = gzcompress($dec);
+        return (base64_encode($dec));
+    }
+
+    public function getFileTemp(): string
+    {
+        return $this->file['tmp_name'];
+    }
+
+    private function getFilePath(): string
+    {
+        $filePath = trim(rtrim($this->filePath, '/'));
+        return $filePath;
+    }
+
+    private function getFileName($fullName = false, $mkdir = false, $enc = false): string
+    {
+        $ext = $enc ? 'bin' : $this->fileExtension;
+        $filePath = $this->getFilePath();
+        $fileName = !empty($this->fileName) ? $this->fileName : $this->file['name'];
+
+        $fileName = explode('.', $fileName);
+        $fileName = $fileName[0] . '.' . $ext;
+
+        if ($mkdir) $this->makeDir($filePath);
+
+        $fileFullName = str_replace(' ', '_', $filePath . '/' . $fileName);
+        if ($fullName) return $fileFullName;
+        return $fileName;
+    }
+
+
+    protected function getFullUploadDetails($fileName, $fileFullName): array
+    {
+        return [
+            'type' => $this->fileExtension,
+            'mimeType' => $this->fileMime,
+            'name' => $fileName,
+            'path' => $fileFullName,
+            'abs_path' => Env::BASE_URI() . $fileFullName,
+            'size' => $this->fileSize($this->file['size'])
+        ];
+    }
+
+
     protected function save()
     {
         $fileName = !empty($this->fileName) ? $this->fileName : $this->file['name'];
@@ -190,7 +286,7 @@ class FileService
             'mimeType' => $this->fileMime,
             'name' => $fileName,
             'path' => $fileFullName,
-            'abs_path' => Env::BASE_URI().$fileFullName,
+            'abs_path' => Env::BASE_URI() . $fileFullName,
             'size' => $this->fileSize($this->file['size'])
         ];
     }
