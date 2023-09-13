@@ -4,7 +4,7 @@ namespace Module\File;
 
 use Core\Env;
 use Core\Http\Res;
-use Module\Encryption;
+use Core\Enums\Encryption;
 
 class FileService
 {

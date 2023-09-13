@@ -1,5 +1,5 @@
 <?php
-namespace Module;
+namespace Core\Enums;
 
 enum Encryption {
     case Algorithm;
