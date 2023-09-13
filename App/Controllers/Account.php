@@ -26,15 +26,16 @@ class Account extends Authenticated
      */
     public function _update(Pipes $req)
     {
-        $req = $req->pipe([
+        // Res::send($this->authenticated);
+        $piped = $req->pipe([
             'first_name' => $req
                 ->firstname()
-                ->default($this->user->firstname)
+                ->default($this->user->first_name)
                 ->match('/^[a-z ]+$/i')
                 ->firstname,
             'last_name' => $req
                 ->lastname()
-                ->default($this->user->lastname)
+                ->default($this->user->last_name)
                 ->match('/^[a-z ]+$/i')
                 ->lastname,
             'username' => $req
@@ -45,16 +46,16 @@ class Account extends Authenticated
                 ->username,
         ]);
 
-        if($req->image && !is_string($req->image)):
+        if(isset($req->image) && !is_string($req->image)):
             $image = File::upload([
                 'file' => $req->image,
                 'path' => 'Public/images/' . $this->user->id
             ]);
-            $pipe->avatar = $image['abs_path'];
+            $piped->avatar = $image['abs_path'];
         endif;
         
         $update = $this->user
-            ->updateUser((array) $req)
+            ->updateUser((array) $piped)
             ->remove(...userFilters());
         Res::json($update);
     }

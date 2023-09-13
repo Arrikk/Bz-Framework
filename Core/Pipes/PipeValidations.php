@@ -132,7 +132,8 @@ abstract class PipeValidations implements PipeValidationInterface
     }
     public function tolower(): PipeValidations
     {
-        $this->{$this->pipe_property_name} = strtolower($this->{$this->pipe_property_name});
+        if ($this->{$this->pipe_property_name} !== null)
+            $this->{$this->pipe_property_name} = strtolower($this->{$this->pipe_property_name});
         return $this;
     }
     public function toupper(): PipeValidations

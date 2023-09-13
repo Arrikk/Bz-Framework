@@ -24,7 +24,8 @@ class AuthPipe extends Controller
                 ->password()
                 ->isrequired()
                 ->is_strong_password()
-                ->password
+                ->password,
+                "_id" => GenerateKey(30, 50)
         ]);
     }
 

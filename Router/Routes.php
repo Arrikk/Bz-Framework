@@ -28,7 +28,7 @@ Route::get('password/token/{token:[\da-f]+}', 'password@token@auth');
 
 // Profile
 Route::get('profile', 'account@profile');
-Route::put('profile', 'account@update')->guard('member');
+Route::post('profile', 'account@update');
 
 // MY
 
@@ -39,19 +39,6 @@ Route::get('wallets', [Wallets::class, 'get']);
 Route::post('wallets', [Wallets::class, 'create']);
 Route::post('credit', [Wallets::class, 'credit']);
 Route::post('debit', [Wallets::class, 'debit']);
-
-//------------------------------------------------------------------------------------------------
-// ========================= COMPANIES ===================================
-//------------------------------------------------------------------------------------------------
-
-Route::put('company', [Companies::class, 'update-company'])->guard('admin');
-Route::get('company', [Companies::class, 'company'])->guard(['admin', 'member']);
-//------------------------------------------------------------------------------------------------
-// ========================= MANAGERS ===================================
-//------------------------------------------------------------------------------------------------
-Route::post('account/member', [Members::class, 'add-member'])->guard('admin');
-Route::get('account/members', [Members::class, 'members']);
-Route::put('account/member', [Members::class, 'update-member'])->guard('admin');
 
 //------------------------------------------------------------------------------------------------
 // ========================= FEATURES  ===================================
@@ -73,23 +60,3 @@ Route::post('manage-subscription', [Portal::class, 'portal']);
 Route::get('payment/success', [CallbackUrl::class, 'success']);
 Route::get('payment/cancel', [CallbackUrl::class, 'cancel']);
 Route::post('webhook', [Webhook::class, 'webhook']);
-
-//------------------------------------------------------------------------------------------------
-// ========================= PODCAST ROUTE ===================================
-//------------------------------------------------------------------------------------------------
-
-Route::post('admin/podcasters', [Podcasts::class, 'podcasters']);
-Route::get('admin/metrics', [Home::class, 'metrics']);
-//------------------------------------------------------------------------------------------------
-// ========================= PODCAST ROUTE ===================================
-//------------------------------------------------------------------------------------------------
-
-Route::post('podcast/publish', [Podcasts::class, 'publish']);
-Route::post('podcast/my-podcast', [Podcasts::class, 'my-podcasts']);
-Route::get('podcast/recent', [Podcasts::class, 'recently-viewed']);
-Route::get('podcast/popular', [Podcasts::class, 'popular-podcasts']);
-Route::post('podcast/find', [Podcasts::class, 'find-podcasts']);
-Route::post('podcast/category', [Categories::class, 'category']);
-Route::get('podcast/categories', [Categories::class, 'categories']);
-Route::get('podcast/{id:[\d\w]+}', [Podcasts::class, 'view']);
-Route::put('podcast/{id:[\d\w]+}', [Podcasts::class, 'update']);
