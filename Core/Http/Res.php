@@ -51,13 +51,18 @@ final class Res implements Resinterface
     public static function throwable(Throwable $th, $withTrace = false, $soft = false)
     {
         header('content-type: application/json');
-        echo json_encode([
+        $dt = [
             "message" => $th->getMessage(),
             "file" => $th->getFile(),
             "line" => $th->getLine(),
             "code" => $th->getCode(),
-            ($withTrace) ?? "trace" => $th->getTraceAsString()
-        ]);
+        ];
+
+        if ($withTrace) :
+            $dt["trace"] = $th->getTraceAsString();
+        endif;
+        
+        echo json_encode($dt);
         if(!$soft) return exit;
     }
 

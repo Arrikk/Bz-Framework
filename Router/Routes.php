@@ -66,4 +66,5 @@ Route::post('webhook', [Webhook::class, 'webhook']);
 // ======================= DOCUMENTS AND FILES MANAGER =======================================
 //------------------------------------------------------------------------------------------
 
-Route::post('folder-create', [Folders::class, 'create']);
+Route::post('folder-create', [Folders::class, 'create']); // Create a new folder
+Route::get('folders-get', [Folders::class, 'folders']); // Get all my Folders

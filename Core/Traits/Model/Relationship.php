@@ -26,10 +26,8 @@ trait Relationship
         if (!$this->paginate)
             return $model::use($table == null ? $this->getCalledClass($model) : $table)::find([$classPlulraRmv => $this->id, '$.order' => 'id '. DESC]);
 
-        $page = Paginate::page($this->paginateOptions);
         return $model::use($table == null ? $this->getCalledClass($model) : $table)::find([
             $classPlulraRmv => $this->id,
-            '$.limit' => $page->page
         ]);
     }
 

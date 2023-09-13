@@ -18,7 +18,7 @@ class Folders extends FolderService
             Res::json($folder);
         } catch (\Throwable $th) {
             //throw $th;
-            Res::status(400)->throwable($th->getMessage());
+            Res::status(400)->throwable($th);
         }
     }
 
@@ -39,7 +39,7 @@ class Folders extends FolderService
     {
         try {
             //code...
-            $folders = $this->foldersService($this->user->id);
+            $folders = $this->foldersService($this->user);
             Res::json($folders);
         } catch (\Throwable $th) {
             //throw $th;

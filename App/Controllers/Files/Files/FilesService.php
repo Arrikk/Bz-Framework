@@ -98,7 +98,7 @@ class FilesService  extends Authenticated
         // return File::findAndUpdate();
     }
 
-    public function sharedLinkService($link, $accessID = null, $currentUserRole)
+    public function sharedLinkService($link, $currentUserRole, $accessID = null)
     {
         $roleWithAccess = $accessID.":$currentUserRole";
 
