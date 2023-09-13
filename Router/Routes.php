@@ -68,3 +68,5 @@ Route::post('webhook', [Webhook::class, 'webhook']);
 
 Route::post('folder-create', [Folders::class, 'create']); // Create a new folder
 Route::get('folders-get', [Folders::class, 'folders']); // Get all my Folders
+Route::get('folder-get', [Folders::class, 'folder']); // Get a folder by their params
+Route::post('folder-update', [Folders::class, 'update-folder']); // Get a folder by their params

@@ -58,12 +58,28 @@ class FolderService extends Authenticated
      * @param Pipes $pipes, Pipes object ready for filtering and validations.. 
      * @return object|array|null
      */
-    public function folderPipe(Pipes $folder)
+    public function folderPipe(Pipes $folder) : object
     {
         return $folder->pipe([
-            'id' => $folder->id()->isrequired()->isint()->id,
-            'user_id' => $folder->user_id()->isrequired()->isint()->user_id,
+            'id' => $folder->folder()->isrequired()->folder,
+            'user_id' => $folder->access_id()->isrequired()->access_id,
         ]);
+    }
+
+    /**
+     * 
+     */
+    public function updateFolderPipe(Pipes $pipe, Folder $folder) :object|null
+    {
+        return $pipe->pipe([
+                'name' => $pipe->name()->default($folder->name)
+                    ->isrequired()->min(1)->max(20)
+                    ->match('/^[\da-z]+$/i')
+                    ->tostudly()->name,
+                'visibility' => $pipe->visibility()->default($folder->visibility)
+                    ->isenum('private', 'public')
+                    ->visibility
+            ]);
     }
 
     /**
@@ -79,17 +95,25 @@ class FolderService extends Authenticated
      * folderService(): This method takes a user ID, folder ID, and an optional folder object as parameters. 
      * It retrieves a folder based on the provided IDs and checks for access permissions. 
      * It returns a formatted folder object. 
+     * @param string|int $user_id, required parameter to get the userID
+     * @param string $folder_id, Folder ID parameter. 
+     * @param bool $formatted, Choose to return a formatted folder or not. Default
+     * @return Folder|bool|null
      */
-    public function folderService($user_id, $folder_id, $folder = null)
+    public function folderService($user_id, $folder_id, $formatted = true) : Folder|bool|null
     {
-        return $this->folderFormat(Folder::findOne([
-            'id' => $folder_id,
+        $folder = Folder::findOne([
+            '_id' => $folder_id,
             'and.user_id' => $user_id,
-            'or.id' => $folder_id,
+            'or._id' => $folder_id,
             '$.and' => Folder::inset($user_id, 'collaborators'),
-            'or.id' => $folder_id,
+            'or._id' => $folder_id,
             '$.and' => Folder::inset($user_id, 'shared')
-        ]), $user_id);
+        ]);
+
+        if($formatted)
+        return $this->folderFormat($folder, $user_id);
+        return $folder;
     }
 
     /**
@@ -121,7 +145,7 @@ class FolderService extends Authenticated
                     ['folder_id' => $folder->id]
                 )
             ),
-        ])->remove('visibility', '_id', 'created_at', 'updated_at');
+        ])->remove('_id', 'created_at', 'updated_at');
     }
 
     /**
@@ -133,7 +157,7 @@ class FolderService extends Authenticated
      */
     public static function foldersService(User $user):array
     {
-        return self::foldersFormat(Folder::myFolders($user), $user->id);
+        return self::foldersFormat(Folder::myFolders($user), $user->_id);
     }
 
     /**
