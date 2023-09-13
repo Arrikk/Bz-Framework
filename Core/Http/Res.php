@@ -3,6 +3,7 @@
 namespace Core\Http;
 
 use Core\Interfaces\Resinterface;
+use Throwable;
 
 /**
  * Base Response
@@ -16,20 +17,20 @@ final class Res implements Resinterface
         return new Res;
     }
 
-    public static function json($message = null)
+    public static function json($message = null, $soft = false)
     {
         header('content-type: application/json');
         echo json_encode($message);
-        return exit;
+        if(!$soft) return exit;
     }
-    public static function error($message = null)
+    public static function error($message = null, $soft = false)
     {
         header('content-type: application/json');
         echo json_encode(['error' => $message]);
-        return exit;
+        if(!$soft) return exit;
     }
 
-    public static function send($message = null)
+    public static function send($message = null, $soft =  false)
     {
         header('content-type: application/json');
         if (is_array($message) || json_encode($message) !== '{}') :
@@ -37,13 +38,27 @@ final class Res implements Resinterface
         else :
             echo ($message);
         endif;
-        return exit;
+
+        if(!$soft) return exit;
     }
 
     public static function raw($message = null)
     {
         return $message;
         exit;
+    }
+
+    public static function throwable(Throwable $th, $withTrace = false, $soft = false)
+    {
+        header('content-type: application/json');
+        echo json_encode([
+            "message" => $th->getMessage(),
+            "file" => $th->getFile(),
+            "line" => $th->getLine(),
+            "code" => $th->getCode(),
+            ($withTrace) ?? "trace" => $th->getTraceAsString()
+        ]);
+        if(!$soft) return exit;
     }
 
     public static function ip()

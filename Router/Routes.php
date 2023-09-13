@@ -2,6 +2,7 @@
 
 use App\Controllers\Company\Companies;
 use App\Controllers\Features\Features;
+use App\Controllers\Files\Folders;
 use App\Controllers\Finance\Wallets\Wallets;
 use App\Controllers\Home;
 use App\Controllers\Members\Members;
@@ -60,3 +61,9 @@ Route::post('manage-subscription', [Portal::class, 'portal']);
 Route::get('payment/success', [CallbackUrl::class, 'success']);
 Route::get('payment/cancel', [CallbackUrl::class, 'cancel']);
 Route::post('webhook', [Webhook::class, 'webhook']);
+
+// -------------------------------------------------------------------------------------
+// ======================= DOCUMENTS AND FILES MANAGER =======================================
+//------------------------------------------------------------------------------------------
+
+Route::post('folder-create', [Folders::class, 'create']);

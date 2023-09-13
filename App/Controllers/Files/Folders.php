@@ -18,7 +18,7 @@ class Folders extends FolderService
             Res::json($folder);
         } catch (\Throwable $th) {
             //throw $th;
-            Res::status(400)->error($th->getMessage());
+            Res::status(400)->throwable($th->getMessage());
         }
     }
 

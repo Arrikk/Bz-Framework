@@ -22,7 +22,7 @@ class FolderService extends Authenticated
         return $folder->pipe([
             'user_id' => $userID,
             'name' => $folder->name()
-                ->isrequired()->min(2)->max(20)
+                ->isrequired()->min(1)->max(20)
                 ->match('/^[\da-z]+$/i')
                 ->tostudly()->name,
             'visibility' => $folder->visibility()
