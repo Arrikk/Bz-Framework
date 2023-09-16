@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 12, 2023 at 07:24 AM
+-- Generation Time: Sep 16, 2023 at 12:38 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -100,11 +100,12 @@ CREATE TABLE `features` (
 
 CREATE TABLE `files` (
   `id` int NOT NULL,
-  `user_id` int NOT NULL,
+  `_id` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_id` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `storage_size` double DEFAULT NULL,
   `file_data` json DEFAULT NULL,
   `file_path` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `folder_id` int DEFAULT NULL,
+  `folder_id` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `deleted` enum('yes','no') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'no',
   `status` enum('enabled','disabled') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'enabled',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -118,9 +119,19 @@ CREATE TABLE `files` (
 -- Dumping data for table `files`
 --
 
-INSERT INTO `files` (`id`, `user_id`, `storage_size`, `file_data`, `file_path`, `folder_id`, `deleted`, `status`, `created_at`, `updated_at`, `shared`, `visibility`, `share_link`) VALUES
-(15, 4, 121460, '{\"name\": \"analytics.png\", \"path\": \"Public/Images/4/analytics.png\", \"size\": {\"size\": 118.61328125, \"units\": \"KB\", \"size_full\": \"118.61 KB\", \"size_round\": 118.61, \"size_in_bytes\": 121460}, \"type\": \"png\", \"abs_path\": \"Public/Images/4/analytics.png\", \"mimeType\": \"image/png\", \"folder_id\": \"9\"}', 'Public/Images/4/analytics.png', 9, 'no', 'enabled', '2023-09-03 23:30:56', '2023-09-03 23:30:56', NULL, NULL, NULL),
-(16, 2, 1324632, '{\"name\": \"Image Rsh.png\", \"path\": \"Public/Flash/2/Image_Rsh.png\", \"size\": {\"size\": 1.2632675170898438, \"units\": \"MB\", \"size_full\": \"1.26 MB\", \"size_round\": 1.26, \"size_in_bytes\": 1324632}, \"type\": \"png\", \"abs_path\": \"Public/Flash/2/Image_Rsh.png\", \"mimeType\": \"image/png\", \"folder_id\": \"6\"}', 'Public/Flash/2/Image_Rsh.png', 6, 'no', 'enabled', '2023-09-04 12:45:03', '2023-09-04 12:45:03', NULL, NULL, NULL);
+INSERT INTO `files` (`id`, `_id`, `user_id`, `storage_size`, `file_data`, `file_path`, `folder_id`, `deleted`, `status`, `created_at`, `updated_at`, `shared`, `visibility`, `share_link`) VALUES
+(15, NULL, '4', 121460, '{\"name\": \"analytics.png\", \"path\": \"Public/Images/4/analytics.png\", \"size\": {\"size\": 118.61328125, \"units\": \"KB\", \"size_full\": \"118.61 KB\", \"size_round\": 118.61, \"size_in_bytes\": 121460}, \"type\": \"png\", \"abs_path\": \"Public/Images/4/analytics.png\", \"mimeType\": \"image/png\", \"folder_id\": \"9\"}', 'Public/Images/4/analytics.png', '9', 'no', 'enabled', '2023-09-03 23:30:56', '2023-09-03 23:30:56', NULL, NULL, NULL),
+(16, NULL, '2', 1324632, '{\"name\": \"Image Rsh.png\", \"path\": \"Public/Flash/2/Image_Rsh.png\", \"size\": {\"size\": 1.2632675170898438, \"units\": \"MB\", \"size_full\": \"1.26 MB\", \"size_round\": 1.26, \"size_in_bytes\": 1324632}, \"type\": \"png\", \"abs_path\": \"Public/Flash/2/Image_Rsh.png\", \"mimeType\": \"image/png\", \"folder_id\": \"6\"}', 'Public/Flash/2/Image_Rsh.png', '6', 'no', 'enabled', '2023-09-04 12:45:03', '2023-09-04 12:45:03', NULL, NULL, NULL),
+(17, NULL, '12', 119403, '{\"name\": \"Adeyemi Opeyemi.pdf\", \"path\": \"Public/Files/12/Adeyemi_Opeyemi.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/Files/12/Adeyemi_Opeyemi.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": null}', 'Public/Files/12/Adeyemi_Opeyemi.pdf', NULL, 'no', 'enabled', '2023-09-13 15:41:06', '2023-09-13 15:41:06', NULL, NULL, NULL),
+(18, NULL, '12', 119403, '{\"name\": \"Adeyemi Opeyemi.pdf\", \"path\": \"Public/Files/12/Adeyemi_Opeyemi.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/Files/12/Adeyemi_Opeyemi.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": null}', 'Public/Files/12/Adeyemi_Opeyemi.pdf', NULL, 'no', 'enabled', '2023-09-13 15:42:17', '2023-09-13 15:42:17', NULL, NULL, NULL),
+(19, NULL, '12', 119403, '{\"name\": \"MyPdg.pdf\", \"path\": \"Public/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/MyPdg.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/MyPdg.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": null}', 'Public/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/MyPdg.pdf', NULL, 'no', 'enabled', '2023-09-13 15:49:45', '2023-09-13 15:49:45', NULL, NULL, NULL),
+(20, NULL, '12', 119403, '{\"name\": \"Resume.pdf\", \"path\": \"Public/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Resume.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Resume.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": \"UPkBCsh2zRYdQZgoM52y7SqDZoigQEbjDK\"}', 'Public/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Resume.pdf', 'UPkBCsh2zRYdQZgoM52y7SqDZoigQEbjDK', 'no', 'enabled', '2023-09-13 15:51:05', '2023-09-13 15:51:05', NULL, NULL, NULL),
+(21, NULL, '12', 119403, '{\"name\": \"Resume.pdf\", \"path\": \"Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Resume.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Resume.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": \"RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd\"}', 'Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Resume.pdf', 'RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd', 'no', 'enabled', '2023-09-13 15:58:32', '2023-09-13 15:58:32', NULL, NULL, NULL),
+(22, NULL, '12', 119403, '{\"name\": \"UpdatedResume.pdf\", \"path\": \"Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": \"RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd\"}', 'Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf', 'RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd', 'no', 'enabled', '2023-09-13 16:07:43', '2023-09-13 16:07:43', NULL, NULL, NULL),
+(23, 'kCjZqLdW5WZMam6fJZvYTNyg3KzqkaK6lBnxZqupumA4j6Rz84', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 119403, '{\"name\": \"UpdatedResume.pdf\", \"path\": \"Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": \"RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd\"}', 'Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf', 'RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd', 'no', 'enabled', '2023-09-13 16:13:53', '2023-09-13 16:31:50', NULL, NULL, NULL),
+(24, '4bHYj3PNe81Z2gcVj8eKqt1mpYgL8tSS4rzMK1B', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 119403, '{\"name\": \"UpdatedResume.pdf\", \"path\": \"Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": \"RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd\"}', 'Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf', 'RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd', 'no', 'enabled', '2023-09-13 16:14:54', '2023-09-13 16:31:52', NULL, NULL, NULL),
+(26, 'mNWI8sof2gtenB5Y6n6E1DbdG93GUndGLXsljLr', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 119403, '{\"name\": \"UpdatedResume.pdf\", \"path\": \"Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf\", \"mimeType\": \"application/pdf\", \"folder_id\": \"RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd\"}', 'Public/ResumeFiles/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/UpdatedResume.pdf', 'RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd', 'no', 'enabled', '2023-09-13 16:30:10', '2023-09-13 16:30:10', NULL, NULL, NULL),
+(27, 'YVqLZri3AQAaATT8qi9TOY9YnYCNrHwyT3Hrzj', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 119403, '{\"name\": \"Adeyemi Opeyemi.pdf\", \"path\": \"Public/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Adeyemi_Opeyemi.bin\", \"size\": {\"size\": 116.6044921875, \"units\": \"KB\", \"size_full\": \"116.6 KB\", \"size_round\": 116.6, \"size_in_bytes\": 119403}, \"type\": \"pdf\", \"abs_path\": \"local.unv.ioPublic/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Adeyemi_Opeyemi.bin\", \"mimeType\": \"application/pdf\", \"folder_id\": null}', 'Public/Files/91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG/Adeyemi_Opeyemi.bin', NULL, 'no', 'enabled', '2023-09-13 20:12:17', '2023-09-13 20:12:17', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -130,9 +141,10 @@ INSERT INTO `files` (`id`, `user_id`, `storage_size`, `file_data`, `file_path`, 
 
 CREATE TABLE `folders` (
   `id` int NOT NULL,
+  `_id` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `name` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `company_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
+  `user_id` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `collaborators` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `shared` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `visibility` enum('public','private') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'private',
@@ -147,11 +159,51 @@ CREATE TABLE `folders` (
 -- Dumping data for table `folders`
 --
 
-INSERT INTO `folders` (`id`, `name`, `company_id`, `user_id`, `collaborators`, `shared`, `visibility`, `share_link`, `path`, `storage_size`, `created_at`, `updated_at`) VALUES
-(3, 'Docs', NULL, 3, NULL, NULL, 'public', NULL, NULL, NULL, '2023-08-29 21:36:59', '2023-08-29 21:36:59'),
-(6, 'Flash', 2, 2, NULL, NULL, 'private', NULL, NULL, NULL, '2023-08-31 18:32:54', '2023-08-31 18:32:54'),
-(9, 'Images', 4, 4, NULL, '8:manager', 'private', 'yfbcBlYp6AW3fP6gR9xS', NULL, NULL, '2023-09-01 00:33:08', '2023-09-01 00:55:59'),
-(11, 'BruizFiles', 2, 2, NULL, NULL, 'public', NULL, NULL, NULL, '2023-09-01 15:44:19', '2023-09-01 15:44:19');
+INSERT INTO `folders` (`id`, `_id`, `name`, `company_id`, `user_id`, `collaborators`, `shared`, `visibility`, `share_link`, `path`, `storage_size`, `created_at`, `updated_at`) VALUES
+(29, 'XF9PTW3Am4nrAy5UHGuk5TCRGHX3zA', 'RealFriend', NULL, '12', NULL, NULL, 'private', NULL, NULL, NULL, '2023-09-13 13:48:43', '2023-09-13 13:48:43'),
+(31, '8Ihla5xiKF1JVBNy18bhOW5UhPuR2hT8T8uFgYGtKLe4', 'FainFriend', NULL, '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', NULL, NULL, 'private', NULL, NULL, NULL, '2023-09-13 14:18:46', '2023-09-13 14:18:46'),
+(32, '9iwoadgD1aVcfaS6JMobUp5hrnvFVXCdB', 'ResumeFiles', NULL, '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', NULL, NULL, 'private', NULL, NULL, NULL, '2023-09-13 15:54:32', '2023-09-13 15:54:32'),
+(33, 'RSoKKtKnvdFzmS7VnP4zuIGqFLnSeAIkYDagOSd', 'ResumeFiles', NULL, '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', NULL, NULL, 'private', NULL, NULL, NULL, '2023-09-13 15:57:29', '2023-09-13 15:57:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int NOT NULL,
+  `_id` varchar(70) DEFAULT NULL,
+  `user_id` varchar(70) DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `message` varchar(225) DEFAULT NULL,
+  `ip_address` varchar(75) DEFAULT NULL,
+  `browser` text,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `logs`
+--
+
+INSERT INTO `logs` (`id`, `_id`, `user_id`, `type`, `message`, `ip_address`, `browser`, `created_at`, `updated_at`) VALUES
+(1, 'rBeVqT53la3podIl4GyYR1sLYDb9f9TsisTxVqo7jz', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', NULL, '2023-09-15 14:38:18', '2023-09-15 14:38:18'),
+(2, 'dNKb5lbAwJZwrBpBToavoXDpI7943TagI5tCeZd1rIyJoGNMcp', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', NULL, '2023-09-15 14:38:19', '2023-09-15 14:38:19'),
+(3, 'GI7kPlP3kO8xkl2pX6OpwNckxkitMG8eymQhTIfHaZal', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 14:40:18', '2023-09-15 14:40:18'),
+(4, 'FVMP4I8chJYHyp3UbnkJNeEarbkEEbyHNvENnqfpf2mE', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:44:32', '2023-09-15 15:44:32'),
+(5, 'OjaWYdlZRpYhywaRynGmEtP9JA2GzIy56gQ2Np3T99', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:45:27', '2023-09-15 15:45:27'),
+(6, '15iHDiILSUOGRUQKjRQBsUUmsqqPipWz4uaTGHNfnGEhAwGge', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:45:48', '2023-09-15 15:45:48'),
+(7, 'eKd62QLsucxpGxT4Lg1ikFlqXDA9Cxdke', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:45:55', '2023-09-15 15:45:55'),
+(8, 'sNiYhhgwf44Nb4syCXalzgFsg2g71MoLTZh6aW', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:46:10', '2023-09-15 15:46:10'),
+(9, 'RAp8XtdJA8ZBw2Iq2VhtgpG4RFq1mvg6s2BZAKiEYPKd', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:46:58', '2023-09-15 15:46:58'),
+(10, 'F5KKkii2mCWvGhnuivE5YIzYpua3ScuDRXOUwQeB2O9NI1', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:47:00', '2023-09-15 15:47:00'),
+(11, 'AYEVd6mod1d4qvlQBEnfzcsm3jPlzxdoCudKB', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:47:09', '2023-09-15 15:47:09'),
+(12, 'CW8f95Rs6LJukpGMKV68cQDY7Pq7v9ARaxOrYpUec9S4ULk4rL', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:47:25', '2023-09-15 15:47:25'),
+(13, 'sGtCXk1yaYxnyDzem6l8yBnQbbQpGCxCK5PQI', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:47:28', '2023-09-15 15:47:28'),
+(14, 'XgeJvh2SqNVzm116EBkL8NeGohl7jejDyIwOsU9B5GYNl', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:47:39', '2023-09-15 15:47:39'),
+(15, 'Ug9bmTwzcr7NHCjRIux9xfKbkTwc8FyHXqf3TV8uHPD', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:47:41', '2023-09-15 15:47:41'),
+(16, 'ewH7mNa6s1WGnOWU3SZF7GvsUUNlkhca8sInL', '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', 'login', 'You Logged in on your E-Docs account.', '::1', '{\"userAgent\":\"PostmanRuntime\\/7.32.3\",\"name\":\"Unknown\",\"version\":\"7.32.3\",\"platform\":\"Unknown\",\"pattern\":\"#(?<browser>Version||other)[\\/ ]+(?<version>[0-9.|a-zA-Z.]*)#\"}', '2023-09-15 15:51:16', '2023-09-15 15:51:16');
 
 -- --------------------------------------------------------
 
@@ -298,12 +350,15 @@ CREATE TABLE `transactions` (
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `username` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `_id` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `fullname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `fullname` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `avatar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `first_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `last_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `role` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `gender` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `is_verified` enum('yes','no') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'no',
   `is_active` enum('yes','no') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'no',
   `status` enum('1','2','3','4','5') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1',
@@ -325,15 +380,18 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `fullname`, `avatar`, `first_name`, `last_name`, `is_verified`, `is_active`, `status`, `account_type`, `zip_code`, `country`, `company_name`, `company_email`, `address`, `company_zip`, `password_hash`, `password_reset_hash`, `password_reset_expiry`, `created_at`, `updated_at`) VALUES
-(2, NULL, 'ikrm@gmail.com', 'Bruiz Horpeyhermi', NULL, NULL, NULL, 'no', 'no', '1', 'company', 250103, NULL, 'Bruiz Company', NULL, '', NULL, '$2y$10$mpcMXiQhbupo4FvMeV4cw.GfGrj..jEDZtgUJAfHD8pawS/N1yJ3i', NULL, NULL, '2023-08-29 20:39:42', '2023-08-29 20:39:42'),
-(3, 'ot', 'originalTimi@duck.com', 'Oyelekan Timileyin', 'Public/images/3/67488936.jpeg', NULL, NULL, 'no', 'no', '1', 'company', 1234567, NULL, 'TekNote', NULL, '', NULL, '$2y$10$YAncwHWowRPwhUfdJFGaWegyCybPG124imdiV3QdNUbeK0s8MkVUi', NULL, NULL, '2023-08-29 21:18:56', '2023-08-29 21:25:49'),
-(4, 'ot', 'timileyinoyelekan11@gmail.com', 'Oyelekan Timileyin', 'Public/images/4/67488936.jpeg', NULL, NULL, 'no', 'no', '1', 'company', 1234567, NULL, 'TEkNote', NULL, '', NULL, '$2y$10$HamVddIj7ghT2m9d.2gKfOe4eSJD7jYauZrIeCmF5Fx3EJ8myQFJ.', '770c489691e5cc64fee9ce9552950d6533fc3c77dac26ba97bda2e8ddf6f73b8', '2023-09-02 14:05:46', '2023-08-31 20:43:47', '2023-09-02 11:05:46'),
-(5, NULL, 'timileyinoyelekan11@gmail.com2', 'timi leyin', NULL, NULL, NULL, 'no', 'no', '1', 'company', 70888, NULL, 'OriginalTimi', NULL, '', NULL, '$2y$10$z3p/xhkO3eiW1gwgwLcxB.hsfR5jLr9mkSzJtvdgMHjKDHHMlMrne', NULL, NULL, '2023-09-01 16:36:25', '2023-09-01 16:36:25'),
-(6, NULL, 'timileyinoyelekan11@gmail.com22', '3timi leyin', NULL, NULL, NULL, 'no', 'no', '1', 'company', 123456, NULL, 'OriginalTimi3', NULL, '', NULL, '$2y$10$cYzE2FDdez/uJ2aNYpPc8.mz5UtqkocTWFEmXVLEb1fIe8xIpDZFW', NULL, NULL, '2023-09-01 16:38:07', '2023-09-01 16:38:07'),
-(7, '', 'enokever3@gmail.com', 'Bolu Oluwaseun ', 'Public/images/7/img_211017_090526.jpg', NULL, NULL, 'no', 'no', '1', 'company', 100786, NULL, 'CartRoyal', NULL, '', NULL, '$2y$10$n/1yOkUdLn1OmGTfj9VPZeOSbnKozMn7kim3Qy2LjIg.rhhdOxRpS', NULL, NULL, '2023-09-01 16:50:17', '2023-09-08 18:50:46'),
-(8, NULL, 'timileyinoyelekan11@gmail.com1', '11111111111111111111', NULL, NULL, NULL, 'no', 'no', '1', 'company', 11111, NULL, 'TEkNote', NULL, '', NULL, '$2y$10$4/tY70r.2duiyP48pcvWwOIeu2sWQLupgUWgM0fgPfQHVTSyLnpom', NULL, NULL, '2023-09-02 10:48:42', '2023-09-02 10:48:42'),
-(9, '', 'Info@quenchivstudio.com', 'Esele Uwagwe', 'Public/images/9/Logo_Final_File-03.png', NULL, NULL, 'no', 'no', '1', 'company', 77070, NULL, 'TekNotes Pro', NULL, '', NULL, '$2y$10$mnwSi09wcxaX/MveySVH8u3D.yRHGtXxvm8GjM3OJJhgRkg0lt/9a', NULL, NULL, '2023-09-04 14:23:35', '2023-09-04 15:12:23');
+INSERT INTO `users` (`id`, `_id`, `username`, `email`, `fullname`, `avatar`, `first_name`, `last_name`, `role`, `gender`, `is_verified`, `is_active`, `status`, `account_type`, `zip_code`, `country`, `company_name`, `company_email`, `address`, `company_zip`, `password_hash`, `password_reset_hash`, `password_reset_expiry`, `created_at`, `updated_at`) VALUES
+(2, NULL, NULL, 'ikrm@gmail.com', 'Bruiz Horpeyhermi', NULL, NULL, NULL, NULL, NULL, 'no', 'no', '1', 'company', 250103, NULL, 'Bruiz Company', NULL, '', NULL, '$2y$10$mpcMXiQhbupo4FvMeV4cw.GfGrj..jEDZtgUJAfHD8pawS/N1yJ3i', NULL, NULL, '2023-08-29 20:39:42', '2023-08-29 20:39:42'),
+(3, NULL, 'ot', 'originalTimi@duck.com', 'Oyelekan Timileyin', 'Public/images/3/67488936.jpeg', NULL, NULL, NULL, NULL, 'no', 'no', '1', 'company', 1234567, NULL, 'TekNote', NULL, '', NULL, '$2y$10$YAncwHWowRPwhUfdJFGaWegyCybPG124imdiV3QdNUbeK0s8MkVUi', NULL, NULL, '2023-08-29 21:18:56', '2023-08-29 21:25:49'),
+(4, NULL, 'ot', 'timileyinoyelekan11@gmail.com', 'Oyelekan Timileyin', 'Public/images/4/67488936.jpeg', NULL, NULL, NULL, NULL, 'no', 'no', '1', 'company', 1234567, NULL, 'TEkNote', NULL, '', NULL, '$2y$10$HamVddIj7ghT2m9d.2gKfOe4eSJD7jYauZrIeCmF5Fx3EJ8myQFJ.', '770c489691e5cc64fee9ce9552950d6533fc3c77dac26ba97bda2e8ddf6f73b8', '2023-09-02 14:05:46', '2023-08-31 20:43:47', '2023-09-02 11:05:46'),
+(5, NULL, NULL, 'timileyinoyelekan11@gmail.com2', 'timi leyin', NULL, NULL, NULL, NULL, NULL, 'no', 'no', '1', 'company', 70888, NULL, 'OriginalTimi', NULL, '', NULL, '$2y$10$z3p/xhkO3eiW1gwgwLcxB.hsfR5jLr9mkSzJtvdgMHjKDHHMlMrne', NULL, NULL, '2023-09-01 16:36:25', '2023-09-01 16:36:25'),
+(6, NULL, NULL, 'timileyinoyelekan11@gmail.com22', '3timi leyin', NULL, NULL, NULL, NULL, NULL, 'no', 'no', '1', 'company', 123456, NULL, 'OriginalTimi3', NULL, '', NULL, '$2y$10$cYzE2FDdez/uJ2aNYpPc8.mz5UtqkocTWFEmXVLEb1fIe8xIpDZFW', NULL, NULL, '2023-09-01 16:38:07', '2023-09-01 16:38:07'),
+(7, NULL, '', 'enokever3@gmail.com', 'Bolu Oluwaseun ', 'Public/images/7/img_211017_090526.jpg', NULL, NULL, NULL, NULL, 'no', 'no', '1', 'company', 100786, NULL, 'CartRoyal', NULL, '', NULL, '$2y$10$n/1yOkUdLn1OmGTfj9VPZeOSbnKozMn7kim3Qy2LjIg.rhhdOxRpS', NULL, NULL, '2023-09-01 16:50:17', '2023-09-08 18:50:46'),
+(8, NULL, NULL, 'timileyinoyelekan11@gmail.com1', '11111111111111111111', NULL, NULL, NULL, NULL, NULL, 'no', 'no', '1', 'company', 11111, NULL, 'TEkNote', NULL, '', NULL, '$2y$10$4/tY70r.2duiyP48pcvWwOIeu2sWQLupgUWgM0fgPfQHVTSyLnpom', NULL, NULL, '2023-09-02 10:48:42', '2023-09-02 10:48:42'),
+(9, NULL, '', 'Info@quenchivstudio.com', 'Esele Uwagwe', 'Public/images/9/Logo_Final_File-03.png', NULL, NULL, NULL, NULL, 'no', 'no', '1', 'company', 77070, NULL, 'TekNotes Pro', NULL, '', NULL, '$2y$10$mnwSi09wcxaX/MveySVH8u3D.yRHGtXxvm8GjM3OJJhgRkg0lt/9a', NULL, NULL, '2023-09-04 14:23:35', '2023-09-04 15:12:23'),
+(10, NULL, NULL, 'flash@gmail.com', 'Horpeyhermi Herdeyhermi', NULL, NULL, NULL, NULL, NULL, 'no', 'no', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$10$uPTsDn.34gCVRyUD1gGFReVxaC7pr0tuQFJ9ngSZZlAxH4Evq0FWK', NULL, NULL, '2023-09-12 09:44:40', '2023-09-12 09:44:40'),
+(11, NULL, NULL, 'flsh@gmail.com', NULL, NULL, 'Horpeyhermi', 'Flash', NULL, NULL, 'no', 'no', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$10$4G.juIOgixU98CZmg0XPaeCawxdZJWCN2allGCEWqYpd8wQeDWJRu', NULL, NULL, '2023-09-12 09:49:03', '2023-09-12 09:49:03'),
+(12, '91LQzGkb8FgUoVdoaIPKKxuFBkn1LO2TsUSQIHgG', NULL, 'bz@gmail.com', NULL, 'local.unv.ioPublic/images/12/download.jpg', 'Horpeyhermi', 'Flash', NULL, NULL, 'no', 'no', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$10$qKvAqg1JXDT/Cm1V1H6Up.sgVw8gUTfTbfAq1mrQMhY43fyz3MnTi', NULL, NULL, '2023-09-12 10:01:35', '2023-09-12 10:13:47');
 
 -- --------------------------------------------------------
 
@@ -391,6 +449,12 @@ ALTER TABLE `files`
 -- Indexes for table `folders`
 --
 ALTER TABLE `folders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `logs`
+--
+ALTER TABLE `logs`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -479,13 +543,19 @@ ALTER TABLE `features`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `folders`
 --
 ALTER TABLE `folders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT for table `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -533,7 +603,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `wallets`

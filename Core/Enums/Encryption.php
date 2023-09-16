@@ -12,7 +12,7 @@ enum Encryption {
         
         $encAlg ="AES-256-CBC";
         $hash = 'sha256';
-        $encKEy = "gIVcwCv9zZ2fR8pkKHcH";
+        $encKEy = GenerateKey();
 
         $iv = substr($encKEy, 0, 14);
         $secret = hash($hash, $encKEy);

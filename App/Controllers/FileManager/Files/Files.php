@@ -2,6 +2,7 @@
 
 namespace App\Controllers\FileManager\Files;
 
+use App\Helpers\Logs;
 use App\Helpers\Paginate;
 use App\Models\File as ModelsFile;
 use Core\Http\Res;
@@ -45,7 +46,9 @@ class Files extends FileService
             Res::json([
                 'message' => "File uploaded successfully",
                 'data' => $this->formatFileService($upload, false)
-            ]);
+            ], true);
+
+            Logs::instance()->createDocument($this->user);
         } catch (\Throwable $th) {
             // If any error occurs during the file upload process, the catch block is executed, and an error response is returned.
             //throw $th;

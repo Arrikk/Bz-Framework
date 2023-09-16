@@ -3,6 +3,8 @@
 namespace App\Controllers\Auth;
 
 use App\Helpers\Auth;
+use App\Helpers\Logs;
+use App\Helpers\Notifications;
 use App\Models\User;
 use App\Pipes\UserPipe;
 use App\Token;
@@ -39,10 +41,14 @@ class Users extends AuthPipe
      */
     public function login(Pipes $body)
     {
+
         $piped = $this->loginPipe($body);
 
         $auth = Auth::login($piped->email, $piped->password);
 
-        Res::json($auth);
+        Logs::instance()->login($auth);
+        
+        Res::json($auth->only('token'), true);
+        // Notifications::instance("Hello LoggedIN", "Hrllo There")->firebase("Login");
     }
 }

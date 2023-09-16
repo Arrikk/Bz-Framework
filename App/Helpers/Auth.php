@@ -100,7 +100,7 @@ class Auth extends User
 
             ]));
             // self::loginSession($loggedIn->id);
-            return $loggedIn->append(['token' => $token])->only('token');
+            return $loggedIn->append(['token' => $token]);
         endif;
     }
 }

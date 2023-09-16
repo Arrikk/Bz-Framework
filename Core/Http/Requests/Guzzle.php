@@ -36,8 +36,9 @@ abstract class Guzzle extends BaseReq
             // Res::json($resp->getBody());
             return json_decode($resp->getBody());
         } catch (GuzzleHttp\Exception\ClientException $th) {
-            $message = json_decode($th->getResponse()->getBody()->getContents());
-            Res::status($th->getCode())->json($message);
+            $message = ($th->getResponse()->getBody()->getContents());
+            if(!is_string($message)) $message = json_decode($message);
+            Res::status($th->getCode())->error($message);
         }
     }
 
