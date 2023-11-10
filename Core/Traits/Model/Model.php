@@ -53,7 +53,9 @@ trait Model
     private static function table()
     {
         $class = explode('\\', get_called_class());
-        $class = strtolower(end($class)) . 's';
+        $class = end($class);
+        $class = preg_replace('/([a-z])([A-Z])/', '$1_$2', $class);
+        $class = strtolower($class) . 's';
 
         $table = self::$isTable ? self::$isTable : ($class ?? static::$table);
         return $table;

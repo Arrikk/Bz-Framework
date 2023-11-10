@@ -42,6 +42,7 @@ abstract class PipeValidations implements PipeValidationInterface
 
     public function max(int $max = 10, string $message = null): PipeValidations
     {
+        if($this->{$this->pipe_property_name} === null) $this->{$this->pipe_property_name} = "";
         if (strlen($this->{$this->pipe_property_name}) > $max)
             return $this->setError($this->pipe_property_name, $message ?? "Value must be greater than $max");
         return $this;

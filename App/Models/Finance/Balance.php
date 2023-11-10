@@ -39,12 +39,13 @@ class Balance extends Model
     {
         $wallet = self::findOne(['user_id' => $userID, 'and.wallet_id' => $walletID]);
 
-        if($wallet)return self::findAndUpdate([
-            'user_id' => $userID,
-            'and.wallet_id' => $walletID,
-        ], ['wallet_balance' => $amount, 'updated_at' => CURRENT_DATE]);
+        if($wallet)return $wallet->modify([
+            'wallet_balance' => $amount, 
+            'updated_at' => CURRENT_DATE
+        ]);
 
         return self::dump([
+            '_id' => GenerateKey(),
             'wallet_id' => $walletID,
             'user_id' => $userID,
             'wallet_balance' => $amount,

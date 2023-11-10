@@ -333,7 +333,7 @@ function url_slug($str, $options = array())
     $str = trim($str, $options['delimiter']);
     return $options['lowercase'] ? mb_strtolower($str, 'UTF-8') : $str;
 }
-function GenerateKey($minlength = 20, $maxlength = 20, $uselower = true, $useupper = true, $usenumbers = true, $usespecial = false) {
+function GenerateKey($minlength = 30, $maxlength = 50, $uselower = true, $useupper = true, $usenumbers = true, $usespecial = false) {
     $charset = '';
     if ($uselower) {
         $charset .= 'abcdefghijklmnopqrstuvwxyz';

@@ -17,9 +17,11 @@ class WalletsLogic extends FinancePipe
      */
     public function balance(User $user, $wallet_id = null)
     {
+        
         $inWallets = $this->wallets($wallet_id);
-
-        if ($wallet_id) return $this->singleWalletBalance($user, $wallet_id, $inWallets);
+        if ($wallet_id):
+             return $this->singleWalletBalance($user, $wallet_id, $inWallets);
+        endif;
 
         $walletBalance = $user->wallets();
 
@@ -78,26 +80,28 @@ class WalletsLogic extends FinancePipe
     public function recordTransactions($data, $type)
     {
         return Transaction::use('transactions')::dump([
+            '_id' => GenerateKey(),
             'user_id' => $data->user_id,
             'wallet_id' => $data->wallet_id,
             'transaction_type' => $type,
             'transaction_amount' => $data->amount ?? 0,
-            'balance_before' => $data->balance_before ?? '',
-            'balance_after' => $data->balance_after ?? '',
+            'balance_before' => $data->balance_before ?? 0,
+            'balance_after' => $data->balance_after ?? 0,
             'transaction_reference' => '',
-            'transaction_meta' => json_encode($data->meta ?? []),
+            'transaction_meta' => $data->meta !== null ? serialize($data->meta) : null,
             'transaction_status' => $data->transaction_status ?? ''
         ]);
     }
 
-    public function transact($balance, $user, $wallet_id, $amount, $type)
+    public function transact($balance, $user, $wallet_id,  $amount, $newBalance, $type, $metaData = null)
     {
-        $credit = (array) Balance::transact($user->id, $wallet_id, $amount);
+        $credit = (array) Balance::transact($user->id, $wallet_id, $newBalance);
         $tx = $this->recordTransactions((object)array_merge($credit, [
             'transaction_status' => 'completed',
             'balance_before' => $balance->wallet_balance,
             'amount' => $amount,
-            'balance_after' => $amount
+            'balance_after' => $newBalance,
+            'meta' => $metaData
         ]), $type);
         Res::json($tx);
     }

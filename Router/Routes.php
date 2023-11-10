@@ -20,7 +20,7 @@ Route::get('', 'home@index');
 
 // Auth Route
 Route::post('register', 'users@register@auth');
-Route::post('login', 'users@login@auth');
+Route::post('auth/login', 'users@login@auth');
 
 // Password
 Route::put('password/change', 'password@change@auth');
@@ -39,8 +39,8 @@ Route::get('my/wallets', [Wallets::class, 'wallet-balance']);
 // Finance Routes
 Route::get('wallets', [Wallets::class, 'get']);
 Route::post('wallets', [Wallets::class, 'create']);
-Route::post('credit', [Wallets::class, 'credit']);
-Route::post('debit', [Wallets::class, 'debit']);
+Route::post('wallet/credit', [Wallets::class, 'credit']);
+Route::post('wallet/debit', [Wallets::class, 'debit']);
 
 //------------------------------------------------------------------------------------------------
 // ========================= FEATURES  ===================================
