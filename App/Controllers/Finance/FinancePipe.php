@@ -60,7 +60,7 @@ class FinancePipe extends Authenticated
                 ->isrequired()
                 ->tofloat()
                 ->amount,
-            'meta_data' => $pipe->meta_data
+            'meta_data' => $pipe->meta_data()->object(['transaction_request_id' => 'isrequired'])->meta_data
         ]);
     }
 }

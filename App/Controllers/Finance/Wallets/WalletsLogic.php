@@ -8,6 +8,7 @@ use App\Models\Finance\Balance;
 use App\Models\Finance\Transaction;
 use App\Models\Finance\Wallet;
 use App\Models\User;
+use App\Models\TransactionMeta;
 use Core\Http\Res;
 
 class WalletsLogic extends FinancePipe
@@ -79,7 +80,7 @@ class WalletsLogic extends FinancePipe
 
     public function recordTransactions($data, $type)
     {
-        return Transaction::use('transactions')::dump([
+         $tx = Transaction::dump([
             '_id' => GenerateKey(),
             'user_id' => $data->user_id,
             'wallet_id' => $data->wallet_id,
@@ -88,12 +89,33 @@ class WalletsLogic extends FinancePipe
             'balance_before' => $data->balance_before ?? 0,
             'balance_after' => $data->balance_after ?? 0,
             'transaction_reference' => '',
+            'transaction_tag_type' => $data->transaction_tag_type,
             'transaction_meta' => $data->meta !== null ? serialize($data->meta) : null,
             'transaction_status' => $data->transaction_status ?? ''
-        ]);
+        ],);
+
+        if($tx):
+            if($data->meta):
+                $meta = (array) $data->meta;
+                $data = [];
+                foreach($meta as $m => $d):
+                    $data[] = [
+                        '_id' => GenerateKey(),
+                        'transaction_id' => $tx->_id,
+                        'meta_key' => $m,
+                        'meta_value' => $d
+                    ];
+                endforeach;
+                $meta = TransactionMeta::dumpMany($data);
+                $meta = \App\Helpers\Filters::from($meta)->remove('id', '_id', 'transaction_id')->done();
+                $tx->meta_data = $meta;
+            endif;
+        endif;
+        return $tx;
     }
 
-    public function transact($balance, $user, $wallet_id,  $amount, $newBalance, $type, $metaData = null)
+
+    public function transact($balance, $user, $wallet_id,  $amount, $newBalance, $type, $metaData = null, $tag_type = null)
     {
         $credit = (array) Balance::transact($user->id, $wallet_id, $newBalance);
         $tx = $this->recordTransactions((object)array_merge($credit, [
@@ -101,8 +123,18 @@ class WalletsLogic extends FinancePipe
             'balance_before' => $balance->wallet_balance,
             'amount' => $amount,
             'balance_after' => $newBalance,
+            'transaction_tag_type' => $tag_type,
             'meta' => $metaData
         ]), $type);
         Res::json($tx);
+    }
+
+    public function alreadyExists($request_id)
+    {
+        $meta = \App\Models\TransactionMeta::findOne([
+            'meta_key' => 'transaction_request_id',
+            'and.meta_value' => $request_id
+        ]);
+        return $meta;
     }
 }

@@ -5,6 +5,7 @@ use App\Controllers\Features\Features;
 use App\Controllers\FileManager\Files\Files;
 use App\Controllers\FileManager\Folders\Folders;
 use App\Controllers\Finance\Wallets\Wallets;
+use App\Controllers\Earn\Earn;
 use App\Controllers\Home;
 use App\Controllers\Members\Members;
 use App\Controllers\Plans\Plans;
@@ -41,6 +42,8 @@ Route::get('wallets', [Wallets::class, 'get']);
 Route::post('wallets', [Wallets::class, 'create']);
 Route::post('wallet/credit', [Wallets::class, 'credit']);
 Route::post('wallet/debit', [Wallets::class, 'debit']);
+
+Route::post('earn/task', [Earn::class, 'earn-from-task']);
 
 //------------------------------------------------------------------------------------------------
 // ========================= FEATURES  ===================================

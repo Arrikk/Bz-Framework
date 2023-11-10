@@ -37,14 +37,14 @@ class Balance extends Model
 
     public static function transact($userID, $walletID, $amount)
     {
-        $wallet = self::findOne(['user_id' => $userID, 'and.wallet_id' => $walletID]);
+        $wallet = Balance::findOne(['user_id' => $userID, 'and.wallet_id' => $walletID]);
 
         if($wallet)return $wallet->modify([
             'wallet_balance' => $amount, 
             'updated_at' => CURRENT_DATE
         ]);
 
-        return self::dump([
+        return Balance::dump([
             '_id' => GenerateKey(),
             'wallet_id' => $walletID,
             'user_id' => $userID,
