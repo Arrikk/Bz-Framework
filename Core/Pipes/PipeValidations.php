@@ -42,15 +42,14 @@ abstract class PipeValidations implements PipeValidationInterface
 
     public function max(int $max = 10, string $message = null): PipeValidations
     {
-        if($this->{$this->pipe_property_name} === null) $this->{$this->pipe_property_name} = "";
-        if (strlen($this->{$this->pipe_property_name}) > $max)
+        if (strlen($this->{$this->pipe_property_name} ?? "") > $max)
             return $this->setError($this->pipe_property_name, $message ?? "Value must be greater than $max");
         return $this;
     }
 
     public function min(int $min = 4, string $message = null): PipeValidations
     {
-        if ($this->{$this->pipe_property_name} === null || strlen($this->{$this->pipe_property_name}) < $min)
+        if (strlen($this->{$this->pipe_property_name} ?? "") < $min)
             return $this->setError($this->pipe_property_name, $message ?? "Value cannot be lesser than $min");
         return $this;
     }
@@ -118,8 +117,14 @@ abstract class PipeValidations implements PipeValidationInterface
     }
     public function isbool($message = null): PipeValidations
     {
-        return ($this->{$this->pipe_property_name} === "1" || $this->{$this->pipe_property_name} !== "0" || $this->{$this->pipe_property_name} !== ''
-            ? $this : $this->setError($this->pipe_property_name, $message ?? "Value must be a boolean"));
+        
+        $value = $this->{$this->pipe_property_name};
+        if (!in_array($value, [true, false, 0, 1, "0", "1"], true)) {
+            return $this->setError($this->pipe_property_name, $message ?? "Value must be a boolean");
+        }
+        return $this;
+        // return ($this->{$this->pipe_property_name} === "1" || $this->{$this->pipe_property_name} !== "0" || $this->{$this->pipe_property_name} !== ''
+        //     ? $this : $this->setError($this->pipe_property_name, $message ?? "Value must be a boolean"));
         // if ($this->{$this->pipe_property_name} !== "1"  || $this->{$this->pipe_property_name} !== "0" || ($this->{$this->pipe_property_name} !== ''))
         //     return $this->setError($this->pipe_property_name, $message ?? "Value must be a boolean");
         // return $this;
@@ -133,12 +138,13 @@ abstract class PipeValidations implements PipeValidationInterface
     }
     public function tolower(): PipeValidations
     {
-        if ($this->{$this->pipe_property_name} !== null)
-            $this->{$this->pipe_property_name} = strtolower($this->{$this->pipe_property_name});
+        if ($this->{$this->pipe_property_name} === null) $this->{$this->pipe_property_name} = "";
+        $this->{$this->pipe_property_name} = strtolower($this->{$this->pipe_property_name});
         return $this;
     }
     public function toupper(): PipeValidations
     {
+        if ($this->{$this->pipe_property_name} === null) $this->{$this->pipe_property_name} = "";
         $this->{$this->pipe_property_name} = strtoupper($this->{$this->pipe_property_name});
         return $this;
     }
@@ -179,6 +185,16 @@ abstract class PipeValidations implements PipeValidationInterface
                 return $this->setError($this->pipe_property_name, $message ?? "Option Error.. Check Value..");
         return $this;
     }
+    public function isb64($message = null): PipeValidations
+    {
+        if ($this->{$this->pipe_property_name}) {
+            $data = $this->{$this->pipe_property_name};
+            $dataExp = explode(';base64,', $data);
+            // Res::send(!count($dataExp));
+            if ($dataExp && count($dataExp) <= 1) return $this->setError($this->pipe_property_name, $message ?? "Invalid Base64 URl");
+        }
+        return $this;
+    }
     public function replace($regex, $value = ""): PipeValidations
     {
         $this->{$this->pipe_property_name} = preg_replace($regex, $value, $this->{$this->pipe_property_name});
@@ -214,14 +230,67 @@ abstract class PipeValidations implements PipeValidationInterface
         return lcfirst($this->studly($string));
     }
 
-    public function contains($value): PipeValidations
+    public function contains($value, $message = null): PipeValidations
     {
-        // COMING SOON
+        if (strpos((string)$this->{$this->pipe_property_name}, $value) === false)
+            return $this->setError($this->pipe_property_name, $message ?? "Value must contain '{$value}'");
         return $this;
     }
     public function includes($value): PipeValidations
     {
-        // COMING SOON
+        if (is_array($this->{$this->pipe_property_name})) {
+            if (!in_array($value, $this->{$this->pipe_property_name})) {
+                return $this->setError($this->pipe_property_name, "Array does not include the required value");
+            }
+        } elseif (is_string($this->{$this->pipe_property_name})) {
+            if (strpos($this->{$this->pipe_property_name}, $value) === false) {
+                return $this->setError($this->pipe_property_name, "String does not contain the required value");
+            }
+        } else {
+            return $this->setError($this->pipe_property_name, "Value is not a string or array");
+        }
+        return $this;
+    }
+
+    public function toArray(): PipeValidations
+    {
+        $value = $this->{$this->pipe_property_name};
+        if (is_string($value)) {
+            $json = json_decode($value, true);
+            $this->{$this->pipe_property_name} = is_array($json) ? $json : [$value];
+        } elseif (!is_array($value)) {
+            $this->{$this->pipe_property_name} = [$value];
+        }
+        return $this;
+    }
+
+    public function toJson(): PipeValidations
+    {
+        $this->{$this->pipe_property_name} = json_encode($this->{$this->pipe_property_name});
+        return $this;
+    }
+
+    public function trim(): PipeValidations
+    {
+        if (is_string($this->{$this->pipe_property_name})) {
+            $this->{$this->pipe_property_name} = trim($this->{$this->pipe_property_name});
+        }
+        return $this;
+    }
+
+    public function explode(string $delimiter = ','): PipeValidations
+    {
+        if (is_string($this->{$this->pipe_property_name})) {
+            $this->{$this->pipe_property_name} = explode($delimiter, $this->{$this->pipe_property_name});
+        }
+        return $this;
+    }
+
+    public function implode(string $glue = ','): PipeValidations
+    {
+        if (is_array($this->{$this->pipe_property_name})) {
+            $this->{$this->pipe_property_name} = implode($glue, $this->{$this->pipe_property_name});
+        }
         return $this;
     }
     public function has($value): PipeValidations
@@ -234,21 +303,28 @@ abstract class PipeValidations implements PipeValidationInterface
     {
         return $this;
     }
-    public function true($val, string $message = null)
+    public function true($val, $message = null)
     {
         if ($val)
-            return $this->setError($this->pipe_property_name, $message ?? "Value must be an integer");
+            return $this->setError($this->pipe_property_name, $message ?? "Value returned must be false");
         return $this;
     }
-    public function false($val, string $message = null)
+    public function false($val, $message = null)
     {
         if (!$val)
-            return $this->setError($this->pipe_property_name, $message ?? "Value must be an integer");
+            return $this->setError($this->pipe_property_name, $message ?? "Value returned must be true");
+
+        // if(is_callable($val)) call_user_func()
         return $this;
     }
 
-    public function object($validation)
+    public function object(array $validation)
     {
+        $propertyVal = $this->{$this->pipe_property_name};
+
+        if (!is_array($propertyVal) && !is_object($propertyVal))
+            return $this->setError($this->pipe_property_name, "Value must be an array or an object");
+
         $pipe = new Pipes($this->{$this->pipe_property_name});
         $piped = [];
         $originalVal = $this->{$this->pipe_property_name};
@@ -266,6 +342,7 @@ abstract class PipeValidations implements PipeValidationInterface
             $this->setError($this->pipe_property_name, $pipe->pipe_validation_error);
         return $this;
     }
+
 
     public function setError(string $pipe, $error): PipeValidations
     {

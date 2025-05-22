@@ -12,10 +12,10 @@ class Pipes extends PipeValidations
     public function __construct($data)
     {
 
-        foreach ($data as $key => $value) {
-            if ($value === null) $value = "";
-            $this->{$key} = $value;
-        }
+        if ($data)
+            foreach ($data as $key => $value) {
+                $this->{$key} = $value;
+            }
         return $this;
     }
 
@@ -23,7 +23,6 @@ class Pipes extends PipeValidations
     public function __set($name, $value)
     {
         // die("First Call");
-        if ($value === null) $value = "";
         $this->{$name} = $value;
     }
 
@@ -35,7 +34,7 @@ class Pipes extends PipeValidations
     public function __call($name, $arguments)
     {
         $this->pipe_property_name = Secure($name);
-        $this->pipe_property_value = Secure(isset($this->{$name}) ? ($this->{$name} === null ? "" : $this->{$name}) : '', true);
+        $this->pipe_property_value = Secure(isset($this->{$name}) ? $this->{$name} : '', true);
         return $this;
     }
 

@@ -10,7 +10,7 @@ class FinancePipe extends Authenticated
     public function createWalletPipe(Pipes $pipe)
     {
         return $pipe->pipe([
-            '_id' => GenerateKey(30, 50),
+
             'wallet_name' => $pipe
                 ->wallet_name()
                 ->isrequired()
@@ -20,7 +20,7 @@ class FinancePipe extends Authenticated
             'wallet_id' => $pipe
                 ->wallet_id()
                 ->isrequired()
-                ->max(20)
+                ->max(10)
                 ->min(2)
                 ->tolower()
                 ->wallet_id,
@@ -49,7 +49,6 @@ class FinancePipe extends Authenticated
     public function creditPipe(Pipes $pipe)
     {
         return $pipe->pipe([
-            '_id' => GenerateKey(),
             'wallet_id' => $pipe
                 ->wallet_id()
                 ->isrequired()
@@ -59,8 +58,7 @@ class FinancePipe extends Authenticated
                 ->amount()
                 ->isrequired()
                 ->tofloat()
-                ->amount,
-            'meta_data' => $pipe->meta_data()->object(['transaction_request_id' => 'isrequired'])->meta_data
+                ->amount
         ]);
     }
 }

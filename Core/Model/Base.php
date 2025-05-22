@@ -126,7 +126,7 @@ abstract class Base
 
         $query = "SELECT $query";
         if ($table !== '') {
-            $query .= " FROM `$table`";
+            $query .= " FROM $table";
         }
         if (!empty($column)) {
             $query .= " WHERE $column";
@@ -323,6 +323,15 @@ abstract class Base
     private function _mathWith($column, $operator, $value)
     {
         return "$column $operator $value";
+    }    
+    private function _beginTransaction() {
+        return $this->getDB()->beginTransaction();
+    }
+    private function _commitTransaction() {
+        return $this->getDB()->commit();
+    }
+    private function _rollBackTransaction() {
+        return $this->getDB()->rollBack();
     }
     private function _obj()
     {
@@ -350,7 +359,7 @@ abstract class Base
         return $this;
     }
 
-    protected function exec()
+    public function exec()
     {
 
         try {
@@ -398,8 +407,11 @@ abstract class Base
             }
         } catch (\Throwable $th) {
             //throw $th;
-            Res::status(400)->error(['error' => $th->getMessage()]);
+            Res::status(400)->throwable($th);
         }
+    }
+    private function getDB(){
+        return $this->db();
     }
     /**
      * serialize Input

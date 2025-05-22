@@ -11,15 +11,10 @@ use Core\Pipes\Pipes;
 class FeatureService extends Controller
 {
     private $featureKey = [
-        'interactive_investigative_dashboard',
-        'seamless_platform_integration',
-        'integrated_big_data_analytics',
-        'realtime_behavioral_analytics',
-        'dynamic_risk_scoring',
-        'advanced_artificial_intelligence',
-        'predictive_insights_and_alert_prioritization',
-        'continuous_learning_and_model_optimization',
-        'regulatory_compliance_automation'
+        'total_documents',
+        'set_expiration',
+        'no_of_recipients',
+        'custom_smtp'
     ];
     /**
      * Create a new Feature Service...

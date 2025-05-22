@@ -4,8 +4,8 @@
 
 use Core\Env;
 
-define('IP_ADDRESS', GetIpAddress());
-define('BROWSER', GetBrowser());
+define('IP_ADDRESS', function_exists('GetIpAddress') ? GetIpAddress() : '');
+define('BROWSER', function_exists('GetBrowser') ? GetBrowser() : '');
 
 define('LOGIN_LIMIT', 3);
 define('LIMIT', 20);
@@ -17,12 +17,12 @@ define('NOT_VERIFIED', '0');
 define('VERIFIED', '1');
 define('DRAFT', 'draft');
 define('PUBLISHED', 'published');
-define('RANDOM_CODE', rand(111111, 999999));
+define('RANDOM_CODE', function_exists('rand') ? rand(111111, 999999) : '');
 
-define('GEN_KEY', GenerateKey());
+define('GEN_KEY', function_exists('GenerateKey') ? GenerateKey() : '');
 # time
-define('CURRENT_TIME', time());
-define('CURRENT_DATE', date('Y-m-d H:i:s'));
+define('CURRENT_TIME', function_exists('time') ? time() : '');
+define('CURRENT_DATE', function_exists('date') ? date('Y-m-d H:i:s') : '');
 
 define('FILE_PATH', 'Public/images');
 
@@ -51,7 +51,27 @@ define('UNREAD', 'unread');
 define('STAR', 'star');
 define('UNSTAR', 'unstar');
 
-define('BANNED', '0');
-define('TO_BE_REVIEWED', '1');
-define('PENDING_SIGNATURE', '2');
+define('TO_BE_SIGNED', '2');
+define('SIGNED', '1');
 define('TO_BE_SEEN_TODAY', '3');
+
+define('ADMIN', 'admin');
+define('USER', 'user');
+
+define('PENDING', 'pending');
+define('CONVERTED', 'converted');
+define('APPROVED', 'approved');
+define('EXPIRED', 'expired');
+
+define('CLOSED', 'closed');
+define('OPEN', 'open');
+define('AWAITING_REPLY', 'awaiting_reply');
+define('IN_PROGRESS', 'in_progress');
+define('RESOLVED', 'resolved');
+
+define('LOW', 'low');
+define('HIGH', 'high');
+define('MEDIUM', 'medium');
+
+define('CANCELLED', 'canceled');
+define('ACTIVE', 'active');

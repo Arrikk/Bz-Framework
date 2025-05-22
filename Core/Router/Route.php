@@ -19,9 +19,9 @@ class Route
     {
         Request::cors();
         $router = new Router;
+        require 'App/Variables.php';
         require 'Router/Routes.php';
         require 'Utils/utils.php';
-        require 'App/Variables.php';
 
         /**
          * Match the Requested Url

@@ -17,7 +17,7 @@ class PlanService extends Controller
     public function createPlanService(Pipes $pipe)
     {
        return $pipe->pipe([
-        "plan_amount" => $pipe->price()->isrequired()->match('/\d+/')->price,
+        "plan_amount" => $pipe->price()->default("0")->match('/\d+/')->price,
         "plan_name" => $pipe->name()->isrequired()->capitalize()->name,
         "plan_desc" => $pipe->description()->isrequired()->serialize()->description,
         "plan_duration" => $pipe->duration()->isrequired()->serialize()->duration,

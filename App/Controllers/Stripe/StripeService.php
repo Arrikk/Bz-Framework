@@ -12,6 +12,6 @@ class StripeService extends Controller
     function before()
     {
         $this->stripe = 
-        new \Stripe\StripeClient(Env::STRIPE_KEY());
+        new \Stripe\StripeClient(Env::STRIPE_SECRET_KEY());
     }
 }

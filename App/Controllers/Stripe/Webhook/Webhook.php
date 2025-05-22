@@ -13,7 +13,7 @@ class Webhook extends Controller
   private $sig_header;
   function before()
   {
-    \Stripe\Stripe::setApiKey(Env::STRIPE_KEY());
+    \Stripe\Stripe::setApiKey(Env::STRIPE_SECRET_KEY());
     $this->sig_header = ($_SERVER['HTTP_STRIPE_SIGNATURE'] ?? null);
   }
 
@@ -26,7 +26,7 @@ class Webhook extends Controller
     // Parse the message body and check the signature
 
     $webhookSecret = Env::STRIPE_WEBHOOK_SECRET();
-    // Res::json($event);
+
     if (!$webhookSecret) {
       try {
         $event = \Stripe\Webhook::constructEvent(
@@ -45,32 +45,38 @@ class Webhook extends Controller
     $type = $event->type;
     $object = $event->data->object;
 
+    // Res::send($type);
+
     switch ($type) {
+      case 'customer.subscription.created':
+        Service::createCustomerSubscription($object);
+        break;
       case 'checkout.session.completed':
+        Service::subscriptionSessionCompleted($object);
         break;
-      case 'payment_intent.succeeded':
-        Service::updateCustomerSubscription($object->customer, $object);
-        break;
-      case 'subscription.payment_succeeded':
-        Service::updateCustomerSubscription($object->customer, $object);
+      case 'invoice.payment_succeeded':
+        Service::sendInvoice($object);
         break;
       case 'customer.subscription.updated':
+      case 'customer.subscription.deleted':
+        Service::updateSubscriptionStatus($object);
+        break;
+      case 'subscription.payment_succeeded':
         Service::updateCustomerSubscription($object->customer, $object);
         break;
       case 'customer.subscription.resumed':
         Service::updateCustomerSubscription($object->customer, $object);
         break;
-      case 'customer.subscription.deleted':
       case 'subscription_schedule.aborted':
       case 'subscription_schedule.canceled':
         Service::updateCustomerSubscription($object->customer, $object, false);
         break;
-      case 'invoice.paid':
-        Service::sendInvoice($object->hosted_invoice_url, $object->customer_email, $object->customer);
+      case 'customer.subscription.trial_will_end':
         break;
-      case 'invoice.payment_failed':
-        Service::sendInvoice($object->hosted_invoice_url, $object->customer_email, $object->customer);
-        break;
+      // case 'invoice.paid':
+      // case 'invoice.payment_failed':
+      //   Service::sendInvoice($object->hosted_invoice_url, $object->customer_email);
+      //   break;
         // ... handle other event types
       default:
         // Unhandled event type

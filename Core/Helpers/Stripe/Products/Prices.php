@@ -11,7 +11,7 @@ class Prices extends StripeHelperService
     public function setPrice(Pipes $data)
     {
         $data = $data->pipe([
-            'amount' => $data->amount()->isrequired()->isint()->toint()->amount,
+            'amount' => $data->amount()->isint()->toint()->amount,
             'product' => $data->product()->isrequired()->isstring()->product
         ]);
 

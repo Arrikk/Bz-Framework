@@ -12,6 +12,7 @@ class Portal extends Controller
     public function portal($pipe)
     {
         $customer = $pipe->pipe([
+            'url' => $pipe->return_url,
             'id' => $pipe->customer_id()
                 ->isrequired()
                 ->false(Subscription::findOne([
@@ -23,16 +24,16 @@ class Portal extends Controller
             //code...
             // Set your secret key. Remember to switch to your live secret key in production.
             // See your keys here: https://dashboard.stripe.com/apikeys
-            \Stripe\Stripe::setApiKey(Env::STRIPE_KEY());
+            \Stripe\Stripe::setApiKey(Env::STRIPE_SECRET_KEY());
     
             // This is the URL to which the user will be redirected after they have
             // finished managing their billing in the portal.
-            $return_url = Env::RETURN_URL();
+            $return_url = $customer->url ?? Env::STRIPE_RETURN_URL().'settings';
             $stripe_customer_id = $customer->id;
     
             $session = \Stripe\BillingPortal\Session::create([
                 'customer' => $stripe_customer_id,
-                'return_url' => $return_url.'settings/billing',
+                'return_url' => $return_url.'#others',
             ]);
     
             Res::send($session);

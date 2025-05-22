@@ -18,19 +18,19 @@ class Settings extends SettingService
         Res::json($saved);
     }
 
-    public function _get()  
+    public function _get()
     {
-        Res::send($this->settings($this->companyID, null, $this->user->id));
+        Res::send($this->settings());
     }
 
-    public static function settings($userID, $key = null, $user = null)
+    public static function settings($key = null)
     {
         try {
             //code...
-            $setting = Setting::findOne(['user_id' => $userID]);
-            if(!$key) return self::formatData($setting, $user);
+            $setting = Setting::findOne(['user_id' => "1"]);
+            if(!$key) return self::formatData($setting);
          //    Res::send($setting);
-            if($setting !== null && $key !== null && $setting) return self::formatData($setting, $user)->{$key};
+            if($setting !== null && $key !== null && $setting) return self::formatData($setting)->{$key};
         } catch (\Throwable $th) {
             //throw $th;
             Res::status(400)::error($th->getMessage());

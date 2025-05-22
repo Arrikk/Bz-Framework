@@ -8,7 +8,7 @@ use Twig\Template;
 
 class Emails extends Configuration
 {
-    public static function form_creation(string $email, $name = "")
+    public static function sample(string $email, $name = "")
     {
         if (self::$class->form_creation)
             self::sendEmail(
@@ -19,25 +19,6 @@ class Emails extends Configuration
                 "New "
             );
     }
-    public static function document_upload(string $email)
-    {
-        if (self::$class->document_upload)
-        Emails::mail($email, "noreply", "");
-    }
-    
-    public static function form_response(string $email, string $name = "")
-    {
-        if (self::$class->form_response)
-        self::sendEmail(
-            $email,
-            $name,
-            "Form Response",
-            "You have a response to a form you created, Login to your account to view more details...",
-            "Re: "
-        );
-    }
-
-
 
     private static function sendEmail($email, $name, $type, $message, $subject)
     {

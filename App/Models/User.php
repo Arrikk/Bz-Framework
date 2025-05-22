@@ -18,7 +18,7 @@ class User extends Model
 
     public function wallet($wallet_id)
     {
-        return \App\Models\Finance\Balance::findOne([
+        return $this::use('balances')->findOne([
             'wallet_id' => $wallet_id,
             'and.user_id' => $this->id
         ]);

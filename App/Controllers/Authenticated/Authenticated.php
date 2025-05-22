@@ -2,9 +2,8 @@
 
 namespace App\Controllers\Authenticated;
 
-use App\Models\Employee;
-use App\Models\Manager;
-use App\Models\Patient;
+use App\Controllers\Subscriptions\SubscriptionService;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Token;
 use Core\Controller;
@@ -15,6 +14,8 @@ class Authenticated extends Controller
     protected $user;
     protected $authenticated;
     protected $modelClass;
+    protected bool $isAdmin = false;
+    protected $subscription;
     protected function before()
     {
         parent::before();
@@ -27,7 +28,7 @@ class Authenticated extends Controller
                 $user = json_decode($token);
                 $this->authenticated = $user;
                 $this->hasAccess(($user->role ?? null));
-
+                $this->subscription = SubscriptionService::userSubscriptionService($user->id);
                 // $this->modelClass =  $user->is_company ?
                 //     User::class : (($user->is_employee ?? false) ?
                 //         Employee::class : (($user->is_manager ?? false) ?
@@ -48,11 +49,12 @@ class Authenticated extends Controller
 
 
         if (isset($user->id)) {
-            $this->user = User::findOne(['_id' => $user->id]);
+            $this->user = User::findOne(['_id' => $user->id, 'or.id' => $user->id]);
             if (!$this->user) Res::status(404)->error([
                 'message' => "User not found",
                 'token' => $user
             ]);
+            $this->isAdmin = $this->user->role === ADMIN;
         }
     }
 

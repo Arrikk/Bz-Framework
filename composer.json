@@ -8,7 +8,11 @@
         "guzzlehttp/guzzle": "^7.5",
         "vlucas/phpdotenv": "^5.5",
         "stripe/stripe-php": "^10.14",
-        "mailgun/mailgun-php": "^3.5"
+        "mailgun/mailgun-php": "^3.5",
+        "async-aws/s3": "^2.0",
+        "cloudinary/cloudinary_php": "^2.11",
+        "league/csv": "^9.8",
+        "doctrine/migrations": "^3.8"
     },
     "config": {
         "platform-check": false,
@@ -21,7 +25,8 @@
             "Core\\": "Core/",
             "App\\": "App/",
             "Router\\": "Router/",
-            "Module\\": "Module/"
+            "Module\\": "Module/",
+            "Database\\": "Database/"
         }
     }
 }

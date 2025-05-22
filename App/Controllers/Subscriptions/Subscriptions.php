@@ -10,6 +10,7 @@ use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\User;
 use Core\Http\Res;
+use Core\Model\Model;
 use Core\Pipes\Pipes;
 
 class Subscriptions extends SubscriptionService
@@ -20,15 +21,22 @@ class Subscriptions extends SubscriptionService
      */
     public function _subscribe(Pipes $pipe)
     {
-        $create = $this->createSubscriptionService($pipe);
+        try {
+            Model::beginTransaction();
+            $create = $this->createSubscriptionService($pipe);
+    
+            // Res::send($create->plan_id);
+            $active = SubscriptionService::hasActiveSubscriptionService($this->authenticated->id);
+            $checkout = (new CheckoutSession)->checkout(new Pipes([
+                'plan_id' => $create->plan_id,
+                'customer' => $active
+            ]));
+            Model::commitTransaction();
+            Res::send($checkout);
+        } catch (\Throwable $th) {
+            Model::rollBackTransaction();
+        }
 
-        $checkout = (new CheckoutSession)->checkout(new Pipes([
-            'userid' => $this->authenticated->id,
-            'price_id' => $create->amount_id,
-            'plan_id' => $create->plan_id
-        ]));
-
-        Res::send($checkout);
 
         // return Subscription::dump((array) $create);
     }
@@ -87,7 +95,8 @@ class Subscriptions extends SubscriptionService
 
     public function _subscription($userID)
     {
-        $mysub = Subscription::findOne(['user_id' => $this->authenticated->id]);
+        $user = isset($this->auth) ? $this->authenticated->id : $userID;
+        $mysub = Subscription::findOne(['user_id' => $user]);
         // if(!$mysub) Res::status(404)->error("You do not have ");
         Res::send($this->formatSubscriptionService($mysub));
         // return $mysub;

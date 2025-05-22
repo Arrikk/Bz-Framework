@@ -94,7 +94,7 @@ class FileService extends Authenticated
      * Method Saves uploaded file data to DB..
      * set all required fields to save record of uploaded file
      * @return File
-     */
+     */  
     public function _uploadDbService()
     {
         return File::dump([
@@ -138,7 +138,7 @@ class FileService extends Authenticated
      */
     public function fileService($fileID, $userID)
     {
-        $file = File::findOne(['_id' => $fileID, 'and.user_id' => $userID]);
+        $file = File::findOne(['_id' => $fileID, 'and.user_id' => $userID]); 
         if (!$file) Res::status(404)::json(['message' => 'File not found']);
         return $this->formatFileService($file);
     }
@@ -176,4 +176,4 @@ class FileService extends Authenticated
         ];
     }
 
-}
+} 

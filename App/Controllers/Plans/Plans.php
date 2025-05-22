@@ -20,28 +20,31 @@ class Plans extends PlanService
          
         # create a stripe product for this subscription Plan...
         # pipe products data in to product create method.
-        $stripeProduct = (new Products())->create(new Pipes([
-            'name' => $create->plan_name,
-            'description' => $create->plan_desc
-        ]));
-        if(!$stripeProduct) Res::status(400)->error("Error creating product");
-
-        # create a price for created product... 
-        $stripePrice = (new Prices())->setPrice(new Pipes([
-            'amount' => $create->plan_amount,
-            'product' => $stripeProduct->id
-        ]));
+        // if($create->plan_amount > 0) {
+            
+            $stripeProduct = (new Products())->create(new Pipes([
+                'name' => $create->plan_name,
+                'description' => $create->plan_desc
+            ]));
+            if(!$stripeProduct) Res::status(400)->error("Error creating product");
+    
+            # create a price for created product... 
+            $stripePrice = (new Prices())->setPrice(new Pipes([
+                'amount' => $create->plan_amount,
+                'product' => $stripeProduct->id
+            ]));
+        // }
 
         $createPlanLocal = Plan::dump(array_merge((array) $create, [
-            'amount_id' => $stripePrice->id,
-            'plan_id' => $stripeProduct->id
+            'amount_id' => $stripePrice->id ?? "free",
+            'plan_id' => $stripeProduct->id ?? "free"
         ]));
 
         Res::json($this->formatPlanService($createPlanLocal));
     }
 
     /**
-     * Update Plan Controller
+     * Update Plan Controller   
      * @var Pipes $pipe
      * Update a pplan by their ID
      */

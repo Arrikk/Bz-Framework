@@ -39,14 +39,16 @@ class Logs
        return $this->make(Types::UPLOAD_FILE, $user->_id, $mssg);
     }
 
-    private function make($type, $userID, $message)
+    public function make($type, $userID, $message, $type_id = null, $meta = null)
     {
         return Log::dump([
             '_id' => GenerateKey(30, 50),
             'message' => $message,
             'type' => $type,
+            'type_id' => $type_id,
             'user_id' => $userID,
             'ip_address' => $this->ip,
+            'meta' => $meta ? json_encode($meta) : NULL,
             'browser' => json_encode($this->browser)
         ]);
     }

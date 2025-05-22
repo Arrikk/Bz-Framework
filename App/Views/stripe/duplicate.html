@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Duplicate Transaction</title>
+    <style>
+        @keyframes splash {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes repeat {
+            0% {
+                stroke-dashoffset: 0;
+            }
+            100% {
+                stroke-dashoffset: 150;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .duplicate-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+            fill: none;
+            stroke: #FF0000;
+            stroke-width: 3px;
+            transition: transform 0.3s ease-in-out;
+            animation: splash 0.5s ease-in-out forwards;
+        }
+
+        .duplicate-icon.animate {
+            animation-name: repeat, splash;
+            animation-duration: 0.5s, 0.5s;
+            animation-timing-function: ease-in-out;
+            animation-fill-mode: forwards;
+            stroke-dasharray: 150;
+            stroke-dashoffset: 150;
+        }
+
+        .duplicate-icon:hover {
+            transform: scale(1.2);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .contact-support {
+            font-size: 16px;
+            color: #999999;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #FF0000;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: #CC0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg class="duplicate-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <path class="repeat" fill="none" d="M34 18c5.79 0 10.5 4.71 10.5 10.5S39.79 39 34 39s-10.5-4.71-10.5-10.5S28.21 18 34 18zM20 34c-5.79 0-10.5-4.71-10.5-10.5S14.21 13 20 13s10.5 4.71 10.5 10.5S25.79 34 20 34z" stroke="#FF0000" stroke-width="3" />
+        </svg>
+        <h1>Duplicate Transaction</h1>
+        <p>We're sorry, but it appears that a duplicate transaction has been detected.</p>
+        <p class="contact-support">If you believe this is an error, please contact our support team.</p>
+        <a href="mailto:support@example.com" class="button">Contact Support</a>
+    </div>
+
+</body>
+</html>

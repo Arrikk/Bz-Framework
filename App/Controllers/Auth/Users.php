@@ -5,6 +5,7 @@ namespace App\Controllers\Auth;
 use App\Helpers\Auth;
 use App\Helpers\Logs;
 use App\Helpers\Notifications;
+use App\Models\Referral;
 use App\Models\User;
 use App\Pipes\UserPipe;
 use App\Token;
@@ -21,11 +22,26 @@ class Users extends AuthPipe
     public function register(Pipes $body)
     {
         // e.g ['username', $pipe->username]
-        $data = $this->registerPipe($body); // Pipe Data (DTO) ...
+        $data = $this->registerPipe($body); // Pipe Data (DTO) ..
 
         $save = (object) User::save($data);
+        if($body->referral_id) {
+            $id = preg_replace('/\w+/', $body->referral_id, "");
+            $referral = User::findOne(['id' => $id]);
+            if($referral) {
+                Referral::dump([
+                    'referred_id' => $save->id,
+                    'status' => PENDING,
+                    'source' => $body->ref_source ?? 'direct',
+                    'referrer_id' => $referral->id,
+                    'plan' => 'free'
+                ]);
+            }
+        }
         $apiToken = Token::encodeJSON([
-            'id' => "",
+            'id' => $save->id,
+            '_id' => $save->id,
+            'role' => $save->role,
             'expires' => strtotime('+2DAYS')
         ]);
         Res::json(

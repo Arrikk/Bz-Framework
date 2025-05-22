@@ -56,18 +56,26 @@ class File extends FileService
         $files = $options['file'];
         $arr_file  = [];
 
-        for ($i = 0; $i < count($files['name']); $i++) {
 
-            $arr_file[] = array(
-                "name" => $files['name'][$i],
-                "type" => $files['type'][$i],
-                "tmp_name" => $files['tmp_name'][$i],
-                "error" => $files['error'][$i],
-                "size" => $files['size'][$i],
-            );
-        }
+        foreach($files as $key => $file):
+            foreach ($file as $fileKey => $value) {
+                $arr_file[$fileKey][$key] = $value;
+            }
+        endforeach;
+        // Res::send($arr_file);
 
-        foreach ($arr_file as $file) :
+        // for ($i = 0; $i < count($files['name']); $i++) {
+
+        //     $arr_file[] = array(
+        //         "name" => $files['name'][$i],
+        //         "type" => $files['type'][$i],
+        //         "tmp_name" => $files['tmp_name'][$i],
+        //         "error" => $files['error'][$i],
+        //         "size" => $files['size'][$i],
+        //     );
+        // }
+
+        foreach ($arr_file as $key => $file) :
             $opt = $options;
             $opt['file'] = $file;
             $fileService = new FileService($opt);
@@ -80,12 +88,12 @@ class File extends FileService
                 ->validateFileType()
                 ->fileError();
 
-            $fileOBJ[] = $file;
+            $fileOBJ[$key] = $file;
         endforeach;
 
-        for ($i=0; $i < count($fileOBJ); $i++) {
-            $fileOBJ[$i] = $fileOBJ[$i]->save();
-        }
+        foreach($fileOBJ as $key => $file):
+            $fileOBJ[$key] = $fileOBJ[$key]->save();
+        endforeach;
 
         return $fileOBJ;
     }

@@ -42,8 +42,8 @@ class FolderService extends Authenticated
             '_id' => GenerateKey(30, 50),
             'user_id' => $userID,
             'name' => $folder->name()
-                ->isrequired()->min(1)->max(20)
-                ->match('/^[\da-z]+$/i')
+                ->isrequired()->min(1)->max(40)
+                ->match('/^[\da-z ]+$/i')
                 ->tostudly()->name,
             'visibility' => $folder->visibility()
                 ->isenum('private', 'public')
@@ -130,21 +130,21 @@ class FolderService extends Authenticated
         if ($folder instanceof Folder) return $folder->append([
             'id' => $folder->_id,
             'share_id' => $folder->share_link,
-            'share_link' => ($folder->share_link !== null || $folder->share_link !== '') ? Env::BASE_URI() . 'share-access?' . $folder->share_link . '&access_id=' : '',
+            // 'share_link' => ($folder->share_link !== null || $folder->share_link !== '') ? Env::BASE_URI() . 'share-access?' . $folder->share_link . '&access_id=' : '',
             'owner' => $folder->user_id === $accessID,
             'shared' => !empty($folder->shared),
             'public' => $folder->visibility === PUBLIC_F,
             'private' => $folder->visibility === PRIVATE_F,
             // 'collaborators' => static::sharedWith($folder->collaborators ?? ''),
-            'shared_with' => FileManagerService::sharedWith($folder->shared ?? '', $withFilter),
+            // 'shared_with' => FileManagerService::sharedWith($folder->shared ?? '', $withFilter),
             'created_on' => date('D M-d-Y', strtotime($folder->created_at)),
             'last_updated_on' => date('D M-d-Y', strtotime($folder->updated_at)),
-            'files' =>
-            FileService::formatFilesService(
-                File::find(
-                    ['folder_id' => $folder->id]
-                )
-            ),
+            // 'files' =>
+            // FileService::formatFilesService(
+            //     File::find(
+            //         ['folder_id' => $folder->id]
+            //     )
+            // ),
         ])->remove('_id', 'created_at', 'updated_at');
     }
 
@@ -185,12 +185,7 @@ class FolderService extends Authenticated
             'visibility.private' => fn ($visibility) => $visibility === PRIVATE_F,
             // 'collaborators' => fn ($collaborators) => self::employees($collaborators ?? ''),
             'shared.shared_with' => fn ($shared) =>
-            FileManagerService::sharedWith($shared, $withFilter),
-            'id.files' => fn ($id) => (int)
-            File::findOne(
-                ['folder_id' => $id],
-                'count(*) as totalFiles'
-            )->totalFiles ?? 0,
+            FileManagerService::sharedWith($shared, $withFilter)
         ])
             ->remove('visibility', 'shared', '_id', 'company_id', 'user_id')
             ->done();

@@ -20,7 +20,7 @@ class SubscriptionService extends Authenticated
     {
         return $pipe->pipe([
             "plan_id" => $pipe->plan_id()->isrequired()->plan_id,
-            "amount_id" => $pipe->amount_id()->isrequired()->amount_id
+            // "amount_id" => $pipe->amount_id()->isrequired()->amount_id
         ]);
     }
 
@@ -40,7 +40,7 @@ class SubscriptionService extends Authenticated
         ]);
     }
 
-    function formatSubscriptionService($subscription) {
+    static function formatSubscriptionService($subscription) {
         if(!$subscription instanceof Subscription) return $subscription;
 
         return $subscription->append([
@@ -50,7 +50,7 @@ class SubscriptionService extends Authenticated
             'subscription_off_date' => date( 'D M Y H:i A', $subscription->subscription_expiry),
             'plan' => PlanService::formatPlanService(Plan::findOne(['plan_id' => $subscription->plan_id])),
             'subscription_data' => json_decode($subscription->stripe_session_data),
-        ])->remove('stripe_session_data', 'plan_id', 'updated_at', 'created_at');
+        ])->remove('stripe_session_data', 'plan_id', 'updated_at', 'created_at', 'id', '_id', 'user_id');
     }
 
     public static function hasActiveSubscriptionService($userID)
@@ -58,12 +58,21 @@ class SubscriptionService extends Authenticated
         $mySubscription = Subscription::findOne(['user_id' => $userID]);
         if(!$mySubscription) return;
 
-        $expired = time() >= (int) $mySubscription->subscription_expiry;
-        if($expired) return;
+        $expired = (time() > (int) $mySubscription->subscription_expiry) || $mySubscription->status === 'canceled' || $mySubscription->status === 'expired';
+        if($expired) return $mySubscription->stripe_customer_id ?? null;
 
         Res::status(400)::error([
             "message" => "You have an active subscription", 
             "subscription" => $mySubscription->only('subscription_on', 'subscription_expiry')
         ]);
     }
+    
+    public static function userSubscriptionService($userID)
+    {
+        $mySubscription = Subscription::findOne(['user_id' => $userID]);
+        if(!$mySubscription) return;
+        $format = static::formatSubscriptionService($mySubscription);
+        return $format->remove("subscription_data");
+    }
 }
+  

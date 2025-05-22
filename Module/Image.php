@@ -4,6 +4,7 @@ namespace Module;
 
 use App\Models\User;
 use Bulletproof\Image as BulletproofImage;
+use Core\Env;
 use Core\Http\Res;
 
 class Image
@@ -37,7 +38,7 @@ class Image
 
     public function fileExt($ext)
     {
-        $allowed = ['png', 'jpg', 'jpeg', 'gif'];
+        $allowed = ['png', 'jpg', 'jpeg', 'gif', 'pdf'];
         if (in_array(strtolower($ext), $allowed)) return $ext;
         Res::status(400)::json([
             'message' => "Invalid File",
@@ -91,7 +92,7 @@ class Image
         // return $this;
     }
 
-    public function b64($data = '', $path = '')
+    public function b64($data = '', $path = '', $noBase = false)
     {
         $dataExp = explode(';base64,', $data);
         if ($dataExp && count($dataExp) > 1) :
@@ -102,13 +103,13 @@ class Image
                 $this->fileExt($fileExt);
                 $fileData = base64_decode(str_replace(' ', '+', $dataEnd));
                 $key = GenerateKey();
-                $fileName = $this->dir2 . '/' . $key . '.jpg';
+                $fileName = $this->dir2 . '/' . $key . '.'.$fileExt;
                 file_put_contents($fileName, $fileData);
                 $media = [
                     'file' => $fileName,
                 ];
 
-                return $media;
+                return $noBase ? $fileName : Env::BASE_URI().$fileName;
             endif;
         endif;
 
